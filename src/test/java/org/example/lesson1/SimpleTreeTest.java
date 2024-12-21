@@ -132,4 +132,29 @@ public class SimpleTreeTest {
 
         assertThat(leafNode.level).isEqualTo(3);
     }
+
+    @Test
+    void isTreeSymmetricalTest() {
+        SimpleTreeNode<Integer> node = new SimpleTreeNode<>(2, null);
+        SimpleTreeNode<Integer> node2 = new SimpleTreeNode<>(3, null);
+        SimpleTreeNode<Integer> node3 = new SimpleTreeNode<>(4, null);
+        SimpleTreeNode<Integer> node4 = new SimpleTreeNode<>(5, null);
+        SimpleTreeNode<Integer> node5 = new SimpleTreeNode<>(6, null);
+        SimpleTreeNode<Integer> node6 = new SimpleTreeNode<>(7, null);
+        SimpleTreeNode<Integer> node7 = new SimpleTreeNode<>(8, null);
+        SimpleTreeNode<Integer> node8 = new SimpleTreeNode<>(9, null);
+
+        tree.AddChild(defaultRootNode, node);
+        tree.AddChild(defaultRootNode, node2);
+        tree.AddChild(node, node3);
+        tree.AddChild(node, node4);
+        tree.AddChild(node2, node5);
+        tree.AddChild(node2, node6);
+        tree.AddChild(node5, node8);
+        tree.AddChild(node4, node7);
+
+        boolean result = tree.isTreeSymmetrical();
+
+        assertThat(result).isTrue();
+    }
 }

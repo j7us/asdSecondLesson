@@ -174,4 +174,37 @@ class SimpleTree<T>
         NewChild.Parent = ParentNode;
         NewChild.level = ParentNode.level + 1;
     }
+
+    // Задание 3
+    public boolean isTreeSymmetrical() {
+        if (Root == null || Root.Children.isEmpty()) {
+            return true;
+        } else if (Root.Children.size() % 2 != 0) {
+            return false;
+        }
+
+        return isTreeSymmetricalRecursive(Root.Children);
+    }
+
+    private boolean isTreeSymmetricalRecursive(List<SimpleTreeNode<T>> nodes) {
+        List<SimpleTreeNode<T>> childNodes = new ArrayList<>();
+
+        for (int i = 0, x = nodes.size() - 1; i < nodes.size()/2; i++, x--) {
+            if (nodes.get(i).Children == null && nodes.get(i).Children == nodes.get(x).Children) {
+                continue;
+            }
+
+            if (nodes.get(i).Children.size() != nodes.get(x).Children.size()) {
+                return false;
+            }
+            childNodes.addAll(nodes.get(i).Children);
+            childNodes.addAll(nodes.get(x).Children);
+        }
+
+        if (childNodes.isEmpty()) {
+            return true;
+        }
+
+        return isTreeSymmetricalRecursive(childNodes);
+    }
 }
