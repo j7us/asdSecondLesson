@@ -1,4 +1,4 @@
-package org.example.lesson1;
+package org.example.lesson1Tree;
 
 import java.util.*;
 
