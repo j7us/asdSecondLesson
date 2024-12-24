@@ -142,28 +142,51 @@ class BST<T>
                 ? nodeToDelete.LeftChild
                 : findReplacementNodeFromSubTree(nodeToDelete.RightChild);
 
-        BSTNode<T> deletedNodeParent = nodeToDelete.Parent;
+        removeAllConnectionsToDeletedNode(nodeToDelete, replacementNode);
 
-        if (deletedNodeParent.LeftChild == nodeToDelete) {
-            deletedNodeParent.LeftChild = replacementNode;
-        } else {
-            deletedNodeParent.RightChild = replacementNode;
+        if (Root == nodeToDelete) {
+            Root = replacementNode;
         }
-
-        replacementNode.Parent = deletedNodeParent;
-
-        if (replacementNode == nodeToDelete.LeftChild) {
-            replacementNode.LeftChild = null;
-            replacementNode.RightChild = nodeToDelete.RightChild;
-        } else if (replacementNode == nodeToDelete.RightChild) {
-            replacementNode.RightChild = null;
-            replacementNode.LeftChild = nodeToDelete.LeftChild;
-        } else {
-            replacementNode.LeftChild = nodeToDelete.LeftChild;
-            replacementNode.RightChild = nodeToDelete.RightChild;
-        }
-
         return true;
+    }
+
+    private void removeAllConnectionsToDeletedNode(BSTNode<T> nodeToDelete, BSTNode<T> replacement) {
+        BSTNode<T> nodeParent = nodeToDelete.Parent;
+
+        if (nodeParent != null) {
+            if (nodeParent.RightChild == nodeToDelete) {
+                nodeParent.RightChild = replacement;
+            } else {
+                nodeParent.LeftChild = replacement;
+            }
+        }
+
+        if (replacement == null) {
+            return;
+        }
+
+        replacement.Parent = nodeParent;
+
+        if (nodeToDelete.LeftChild == replacement) {
+            replacement.LeftChild = null;
+            replacement.RightChild = nodeToDelete.RightChild;
+        } else if (nodeToDelete.RightChild == replacement) {
+            replacement.RightChild = null;
+            replacement.LeftChild = nodeToDelete.LeftChild;
+        } else {
+            replacement.LeftChild = nodeToDelete.LeftChild;
+            replacement.RightChild = nodeToDelete.RightChild;
+        }
+
+        if (nodeToDelete.LeftChild != null
+                && nodeToDelete.LeftChild != replacement) {
+            nodeToDelete.LeftChild.Parent = replacement;
+        }
+
+        if (nodeToDelete.RightChild != null
+                && nodeToDelete.RightChild != replacement) {
+            nodeToDelete.RightChild.Parent = replacement;
+        }
     }
 
     private BSTNode<T> findReplacementNodeFromSubTree(BSTNode<T> node) {

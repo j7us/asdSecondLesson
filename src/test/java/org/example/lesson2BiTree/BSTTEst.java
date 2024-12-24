@@ -104,24 +104,6 @@ public class BSTTEst {
     }
 
     @Test
-    void DeleteNodeByKeyTest() {
-        BST<String> bst = new BST<>(testRootNode);
-        bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(12, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
-        bst.AddKeyValue(11, "H");
-
-        boolean res = bst.DeleteNodeByKey(10);
-
-        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(10);
-
-        assertThat(findDeleteKeyResult.Node.NodeKey).isEqualTo(7);
-    }
-
-    @Test
     void CountTest() {
         BST<String> bst = new BST<>(testRootNode);
         bst.AddKeyValue(10, "B");
@@ -149,5 +131,54 @@ public class BSTTEst {
         boolean res = bst.isEqualToAnotherTree(bst2);
 
         assertThat(res).isTrue();
+    }
+
+    @Test
+    void DeleteNodeByKeyWithoutChildTest() {
+        BST<String> bst = new BST<>(testRootNode);
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(17, "C");
+
+        bst.DeleteNodeByKey(10);
+        bst.DeleteNodeByKey(17);
+        bst.DeleteNodeByKey(15);
+
+        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(10);
+
+        assertThat(findDeleteKeyResult.Node).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyRootTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.DeleteNodeByKey(15);
+
+        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(15);
+
+        assertThat(findDeleteKeyResult.Node).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyWithLeftChildTest() {
+        BST<String> bst = new BST<>(testRootNode);
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(7, "C");
+        bst.AddKeyValue(34, "D");
+        bst.AddKeyValue(12, "E");
+        bst.AddKeyValue(17, "F");
+        bst.AddKeyValue(1, "G");
+
+
+        bst.DeleteNodeByKey(10);
+        bst.DeleteNodeByKey(7);
+        bst.DeleteNodeByKey(34);
+        bst.DeleteNodeByKey(12);
+        bst.DeleteNodeByKey(17);
+        bst.DeleteNodeByKey(1);
+
+        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(15);
+
+        assertThat(findDeleteKeyResult.Node.NodeKey).isEqualTo(15);
     }
 }
