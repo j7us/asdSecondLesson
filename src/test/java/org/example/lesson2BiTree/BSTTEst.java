@@ -16,169 +16,214 @@ public class BSTTEst {
     }
 
     @Test
-    void FindNodeByKeyLeftTest() {
-        BSTNode<String> leftTestNode = new BSTNode<>(10, "B", testRootNode);
-        BSTNode<String> rightTestNode = new BSTNode<>(20, "C", testRootNode);
-
-        testRootNode.LeftChild = leftTestNode;
-        testRootNode.RightChild = rightTestNode;
-
+    void FindNodeByKeyRootTest() {
         BST<String> bst = new BST<>(testRootNode);
 
-        BSTFind<String> resultNode = bst.FindNodeByKey(5);
+        BSTFind<String> res = bst.FindNodeByKey(15);
 
-        assertThat(resultNode.Node).isEqualTo(leftTestNode);
+        assertThat(res.Node.NodeKey).isEqualTo(15);
+        assertThat(res.NodeHasKey).isTrue();
     }
 
     @Test
-    void FindNodeByKeyRightTest() {
-        BSTNode<String> leftTestNode = new BSTNode<>(10, "B", testRootNode);
-        BSTNode<String> rightTestNode = new BSTNode<>(20, "C", testRootNode);
-
-        testRootNode.LeftChild = leftTestNode;
-        testRootNode.RightChild = rightTestNode;
-
+    void FindNodeByKeyRootFalseTest() {
         BST<String> bst = new BST<>(testRootNode);
 
-        BSTFind<String> resultNode = bst.FindNodeByKey(20);
+        BSTFind<String> res = bst.FindNodeByKey(17);
 
-        assertThat(resultNode.Node).isEqualTo(rightTestNode);
+        assertThat(res.Node.NodeKey).isEqualTo(15);
+        assertThat(res.NodeHasKey).isFalse();
+        assertThat(res.ToLeft).isFalse();
     }
 
     @Test
-    void FindNodeByKeyWithoytRootTest() {
+    void FindNodeByKeyRootFalssToLeftTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        BSTFind<String> res = bst.FindNodeByKey(14);
+
+        assertThat(res.Node.NodeKey).isEqualTo(15);
+        assertThat(res.NodeHasKey).isFalse();
+        assertThat(res.ToLeft).isTrue();
+    }
+
+    @Test
+    void FindNodeByKeyEmptyTest() {
         BST<String> bst = new BST<>(null);
 
-        BSTFind<String> resultNode = bst.FindNodeByKey(20);
+        BSTFind<String> res = bst.FindNodeByKey(15);
 
-        assertThat(resultNode.Node).isNull();
+        assertThat(res.Node).isNull();
+        assertThat(res.NodeHasKey).isFalse();
     }
+
 
     @Test
     void AddKeyValueTest() {
-        BSTNode<String> leftTestNode = new BSTNode<>(10, "B", testRootNode);
-        BSTNode<String> rightTestNode = new BSTNode<>(20, "C", testRootNode);
-
-        testRootNode.LeftChild = leftTestNode;
-        testRootNode.RightChild = rightTestNode;
-
         BST<String> bst = new BST<>(testRootNode);
 
-        BSTNode<String> insertNode = new BSTNode<>(25, "G", testRootNode);
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "C");
 
-        bst.AddKeyValue(25, "G");
+        BSTFind<String> res = bst.FindNodeByKey(20);
+        BSTFind<String> res2 = bst.FindNodeByKey(10);
 
-        BSTFind<String> result = bst.FindNodeByKey(25);
 
-        assertThat(result.Node.NodeKey).isEqualTo(25);
+        assertThat(res.NodeHasKey).isTrue();
+        assertThat(res.Node.NodeKey).isEqualTo(20);
+        assertThat(res2.NodeHasKey).isTrue();
+        assertThat(res2.Node.NodeKey).isEqualTo(10);
     }
 
     @Test
-    void FinMinMaxWithMaxTest() {
+    void AddKeyValueBigTreeTest() {
         BST<String> bst = new BST<>(testRootNode);
+
         bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(10, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
+        bst.AddKeyValue(20, "C");
+        bst.AddKeyValue(5, "B");
+        bst.AddKeyValue(12, "C");
+        bst.AddKeyValue(17, "B");
+        bst.AddKeyValue(25, "C");
 
-        BSTNode<String> result = bst.FinMinMax(testRootNode, true);
+        BSTFind<String> res = bst.FindNodeByKey(25);
+        BSTFind<String> res2 = bst.FindNodeByKey(5);
 
-        assertThat(result.NodeKey).isEqualTo(1);
+
+        assertThat(res.NodeHasKey).isTrue();
+        assertThat(res.Node.NodeKey).isEqualTo(25);
+        assertThat(res2.NodeHasKey).isTrue();
+        assertThat(res2.Node.NodeKey).isEqualTo(5);
     }
 
     @Test
-    void FinMinMaxWithMinTest() {
-        BST<String> bst = new BST<>(testRootNode);
+    void AddKeyValueEmptyTest() {
+        BST<String> bst = new BST<>(null);
+
         bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(10, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
 
-        BSTNode<String> result = bst.FinMinMax(testRootNode, false);
-
-        assertThat(result.NodeKey).isEqualTo(1);
+        assertThat(bst.Root.NodeKey).isEqualTo(10);
     }
 
     @Test
-    void CountTest() {
-        BST<String> bst = new BST<>(testRootNode);
-        bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(12, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
+    void DeleteNodeByKeyEmptyTest() {
+        BST<String> bst = new BST<>(null);
 
-        int result = bst.Count();
+        boolean res = bst.DeleteNodeByKey(10);
 
-        assertThat(result).isEqualTo(7);
-    }
-
-    @Test
-    void isEqualToAnotherTree() {
-        BST<String> bst = new BST<>(testRootNode);
-        bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(34, "D");
-
-        BST<String> bst2 = new BST<>(new BSTNode<>(15, "A", null));
-        bst2.AddKeyValue(10, "B");
-        bst2.AddKeyValue(34, "D");
-
-        boolean res = bst.isEqualToAnotherTree(bst2);
-
-        assertThat(res).isTrue();
-    }
-
-    @Test
-    void DeleteNodeByKeyWithoutChildTest() {
-        BST<String> bst = new BST<>(testRootNode);
-        bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(17, "C");
-
-        bst.DeleteNodeByKey(10);
-        bst.DeleteNodeByKey(17);
-        bst.DeleteNodeByKey(15);
-
-        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(10);
-
-        assertThat(findDeleteKeyResult.Node).isNull();
+        assertThat(res).isFalse();
     }
 
     @Test
     void DeleteNodeByKeyRootTest() {
         BST<String> bst = new BST<>(testRootNode);
 
-        bst.DeleteNodeByKey(15);
+        boolean res = bst.DeleteNodeByKey(15);
 
-        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(15);
-
-        assertThat(findDeleteKeyResult.Node).isNull();
+        assertThat(res).isTrue();
+        assertThat(bst.Root).isNull();
     }
 
     @Test
-    void DeleteNodeByKeyWithLeftChildTest() {
+    void DeleteNodeByKeyLeftTest() {
         BST<String> bst = new BST<>(testRootNode);
+
+        testRootNode.LeftChild = new BSTNode<>(10, "B", testRootNode);
+
+        boolean res = bst.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(bst.Root.LeftChild).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyRightTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        testRootNode.LeftChild = new BSTNode<>(10, "B", testRootNode);
+        testRootNode.RightChild = new BSTNode<>(20, "C", testRootNode);
+
+        boolean res = bst.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(bst.Root.NodeKey).isEqualTo(20);
+        assertThat(bst.Root.LeftChild.NodeKey).isEqualTo(10);
+    }
+
+    @Test
+    void DeleteNodeByKeyWithChildTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
         bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(12, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
+        bst.AddKeyValue(20, "c");
+        bst.AddKeyValue(30, "D");
 
+        boolean res = bst.DeleteNodeByKey(15);
 
-        bst.DeleteNodeByKey(10);
-        bst.DeleteNodeByKey(7);
-        bst.DeleteNodeByKey(34);
-        bst.DeleteNodeByKey(12);
-        bst.DeleteNodeByKey(17);
-        bst.DeleteNodeByKey(1);
+        assertThat(res).isTrue();
+        assertThat(bst.Root.NodeKey).isEqualTo(20);
+        assertThat(bst.Root.LeftChild.NodeKey).isEqualTo(10);
+        assertThat(bst.Root.RightChild.NodeKey).isEqualTo(30);
+    }
 
-        BSTFind<String> findDeleteKeyResult = bst.FindNodeByKey(15);
+    @Test
+    void DeleteNodeByKeyWithSecondLevelTest() {
+        BST<String> bst = new BST<>(testRootNode);
 
-        assertThat(findDeleteKeyResult.Node.NodeKey).isEqualTo(15);
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "c");
+        bst.AddKeyValue(30, "D");
+        bst.AddKeyValue(21, "D");
+        bst.AddKeyValue(22, "D");
+        bst.AddKeyValue(17, "D");
+
+        boolean res = bst.DeleteNodeByKey(20);
+
+        BSTFind<String> found = bst.FindNodeByKey(20);
+
+        assertThat(res).isTrue();
+        assertThat(found.NodeHasKey).isFalse();
+        assertThat(testRootNode.RightChild.NodeKey).isEqualTo(21);
+    }
+
+    @Test
+    void DeleteNodeByKeyWithThirdLevelTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "c");
+        bst.AddKeyValue(30, "D");
+        bst.AddKeyValue(25, "D");
+        bst.AddKeyValue(22, "D");
+        bst.AddKeyValue(23, "D");
+        bst.AddKeyValue(21, "D");
+
+        boolean res = bst.DeleteNodeByKey(20);
+
+        BSTFind<String> found = bst.FindNodeByKey(20);
+
+        assertThat(res).isTrue();
+        assertThat(found.NodeHasKey).isFalse();
+        assertThat(testRootNode.RightChild.NodeKey).isEqualTo(21);
+    }
+
+    @Test
+    void DeleteNodeByKeyWithLeafTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "c");
+        bst.AddKeyValue(30, "D");
+        bst.AddKeyValue(25, "D");
+        bst.AddKeyValue(22, "D");
+        bst.AddKeyValue(23, "D");
+        bst.AddKeyValue(21, "D");
+
+        boolean res = bst.DeleteNodeByKey(21);
+
+        BSTFind<String> found = bst.FindNodeByKey(21);
+
+        assertThat(res).isTrue();
+        assertThat(found.NodeHasKey).isFalse();
     }
 }

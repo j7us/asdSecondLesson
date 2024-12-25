@@ -48,64 +48,55 @@ class BST<T>
 
     public BSTFind<T> FindNodeByKey(int key)
     {
-        return Root == null
-                ? buildBSTFind(null, false, false)
-                : findNodeByKeyRecursive(Root, key);
+       if (Root == null) {
+           return new BSTFind<>();
+       }
+
+       return findNodeByKeyRecursive(Root, key);
     }
 
     private BSTFind<T> findNodeByKeyRecursive(BSTNode<T> node, int key) {
-        BSTNode<T> nextNode;
-        boolean toLeft = false;
-        boolean hasKey = false;
-
-        if (node.NodeKey > key) {
-            nextNode = checkNodeChildAndReturnNext(node, true);
-            toLeft = true;
-        } else if (node.NodeKey < key) {
-            nextNode = checkNodeChildAndReturnNext(node, false);
-        } else {
-            nextNode = node;
-            hasKey = true;
+        if (node.NodeKey == key || isLastNodeInRecursive(node, key)) {
+            return buildBstFind(node, node.NodeKey == key, node.NodeKey > key);
         }
 
-        return nextNode == node
-                ? buildBSTFind(node, hasKey, toLeft)
-                : findNodeByKeyRecursive(nextNode, key);
+        return node.NodeKey > key
+                ? findNodeByKeyRecursive(node.LeftChild, key)
+                : findNodeByKeyRecursive(node.RightChild, key);
     }
 
-    private BSTNode<T> checkNodeChildAndReturnNext(BSTNode<T> node, boolean findLeft) {
-        BSTNode<T> nextNode = findLeft
-                ? node.LeftChild
-                : node.RightChild;
-
-        return nextNode == null ? node : nextNode;
+    private boolean isLastNodeInRecursive(BSTNode<T> node, int key) {
+        return (node.NodeKey > key && node.LeftChild == null) || (node.NodeKey < key && node.RightChild == null);
     }
 
-    private BSTFind<T> buildBSTFind(BSTNode<T> node, boolean nodeHasKey, boolean toLeft) {
-        BSTFind<T> find = new BSTFind<>();
-        find.Node = node;
-        find.NodeHasKey = nodeHasKey;
-        find.ToLeft = toLeft;
-
-        return find;
+    private BSTFind<T> buildBstFind(BSTNode<T> node, boolean NodeHasKey, boolean ToLeft) {
+        BSTFind<T> res = new BSTFind<>();
+        res.Node = node;
+        res.NodeHasKey = NodeHasKey;
+        res.ToLeft = ToLeft;
+        return res;
     }
 
     public boolean AddKeyValue(int key, T val)
     {
-        BSTFind<T> treeNodeWithCurrentKey = FindNodeByKey(key);
+        BSTFind<T> foundNodeByKey = FindNodeByKey(key);
 
-        if (treeNodeWithCurrentKey.NodeHasKey) {
+        if (foundNodeByKey.NodeHasKey) {
             return false;
         }
 
-        BSTNode<T> nodeToInsert = new BSTNode<>(key, val, treeNodeWithCurrentKey.Node);
+        BSTNode<T> futureParent = foundNodeByKey.Node;
+        BSTNode<T> insertNode = new BSTNode<>(key, val, futureParent);
 
-        if (nodeToInsert.Parent == null) {
-            Root = nodeToInsert;
-        } else if (treeNodeWithCurrentKey.ToLeft) {
-            treeNodeWithCurrentKey.Node.LeftChild = nodeToInsert;
+        if (futureParent == null) {
+            Root = insertNode;
+            return true;
+        }
+
+        if (foundNodeByKey.ToLeft) {
+            futureParent.LeftChild = insertNode;
         } else {
-            treeNodeWithCurrentKey.Node.RightChild = nodeToInsert;
+            futureParent.RightChild = insertNode;
         }
 
         return true;
@@ -115,105 +106,98 @@ class BST<T>
     {
         if (Root == null) {
             return null;
-        } else if (Root.LeftChild == null && Root.RightChild == null) {
-            return Root;
         }
 
-        return findMinMaxRecursive(FromNode, FindMax);
+        return finMinMaxRecursive(FromNode, FindMax);
     }
 
-    private BSTNode<T> findMinMaxRecursive(BSTNode<T> fromNode, boolean findMax) {
-        BSTNode<T> nextNode = findMax ? fromNode.RightChild : fromNode.LeftChild;
+    private BSTNode<T> finMinMaxRecursive(BSTNode<T> fromNode, boolean findMax) {
+        if ((findMax && fromNode.RightChild == null)
+                || (!findMax && fromNode.LeftChild == null)) {
+            return fromNode;
+        }
 
-        return nextNode == null ? fromNode : findMinMaxRecursive(nextNode, findMax);
+        return finMinMaxRecursive(findMax ? fromNode.RightChild : fromNode.LeftChild, findMax);
     }
 
     public boolean DeleteNodeByKey(int key)
     {
-        BSTFind<T> nodeInTreeWithKey = FindNodeByKey(key);
+        BSTFind<T> foundWithKey = FindNodeByKey(key);
 
-        if (!nodeInTreeWithKey.NodeHasKey) {
+        if (!foundWithKey.NodeHasKey) {
             return false;
         }
 
-        BSTNode<T> nodeToDelete = nodeInTreeWithKey.Node;
+        BSTNode<T> delete = foundWithKey.Node;
 
-        BSTNode<T> replacementNode = nodeToDelete.RightChild == null
-                ? nodeToDelete.LeftChild
-                : findReplacementNodeFromSubTree(nodeToDelete.RightChild);
+        BSTNode<T> replacement = delete.RightChild == null
+                ? delete.LeftChild
+                : findDeleteReplacement(delete.RightChild);
 
-        removeAllConnectionsToDeletedNode(nodeToDelete, replacementNode);
+        replaceDeletedNode(delete, replacement);
 
-        if (Root == nodeToDelete) {
-            Root = replacementNode;
+        if (Root == delete) {
+            Root = replacement;
         }
+
         return true;
     }
 
-    private void removeAllConnectionsToDeletedNode(BSTNode<T> nodeToDelete, BSTNode<T> replacement) {
-        BSTNode<T> nodeParent = nodeToDelete.Parent;
+    private void replaceDeletedNode(BSTNode<T> delete, BSTNode<T> replacement) {
+        BSTNode<T> parent = delete.Parent;
 
-        if (nodeParent != null) {
-            if (nodeParent.RightChild == nodeToDelete) {
-                nodeParent.RightChild = replacement;
-            } else {
-                nodeParent.LeftChild = replacement;
-            }
+        if (parent != null) {
+            replaceParentChild(parent, delete, replacement);
         }
 
-        if (replacement == null) {
+        if (replacement == null)
             return;
+
+        replacement.Parent = parent;
+
+        replacement.LeftChild = delete.LeftChild == replacement ? null : delete.LeftChild;
+        replacement.RightChild = delete.RightChild == replacement ? null : delete.RightChild;
+
+        if (replacement.LeftChild != null) {
+            replacement.LeftChild.Parent = replacement;
         }
 
-        replacement.Parent = nodeParent;
-
-        if (nodeToDelete.LeftChild == replacement) {
-            replacement.LeftChild = null;
-            replacement.RightChild = nodeToDelete.RightChild;
-        } else if (nodeToDelete.RightChild == replacement) {
-            replacement.RightChild = null;
-            replacement.LeftChild = nodeToDelete.LeftChild;
-        } else {
-            replacement.LeftChild = nodeToDelete.LeftChild;
-            replacement.RightChild = nodeToDelete.RightChild;
-        }
-
-        if (nodeToDelete.LeftChild != null
-                && nodeToDelete.LeftChild != replacement) {
-            nodeToDelete.LeftChild.Parent = replacement;
-        }
-
-        if (nodeToDelete.RightChild != null
-                && nodeToDelete.RightChild != replacement) {
-            nodeToDelete.RightChild.Parent = replacement;
+        if (replacement.RightChild != null) {
+            replacement.RightChild.Parent = replacement;
         }
     }
 
-    private BSTNode<T> findReplacementNodeFromSubTree(BSTNode<T> node) {
+    private BSTNode<T> findDeleteReplacement(BSTNode<T> node) {
         if (node.LeftChild == null) {
-            replaceLeftNodeByRightChildIfExists(node);
+            swapNodeWithChildIfExists(node, node.RightChild);
             return node;
         }
 
-        return findReplacementNodeFromSubTree(node.LeftChild);
+        return findDeleteReplacement(node.LeftChild);
     }
 
-    private void replaceLeftNodeByRightChildIfExists(BSTNode<T> node) {
-        if (node.RightChild == null) {
+    private void swapNodeWithChildIfExists(BSTNode<T> node, BSTNode<T> nodeChild) {
+        if (nodeChild == null) {
             return;
         }
 
-        BSTNode<T> replacementNode = node.RightChild;
-        node.Parent.LeftChild = replacementNode;
-        replacementNode.Parent = node.Parent;
+        BSTNode<T> nodeParent = node.Parent;
+
+        nodeChild.Parent = nodeParent;
+
+        replaceParentChild(nodeParent, node, nodeChild);
+    }
+
+    private void replaceParentChild(BSTNode<T> parent, BSTNode<T> replaceable, BSTNode<T> replacement) {
+        if (parent.RightChild == replaceable) {
+            parent.RightChild = replacement;
+        } else {
+            parent.LeftChild = replacement;
+        }
     }
 
     public int Count()
     {
-        if (Root == null) {
-            return 0;
-        }
-
         return countRecursive(Root);
     }
 
