@@ -212,18 +212,18 @@ public class BSTTEst {
         BST<String> bst = new BST<>(testRootNode);
 
         bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(20, "c");
-        bst.AddKeyValue(30, "D");
-        bst.AddKeyValue(25, "D");
-        bst.AddKeyValue(22, "D");
-        bst.AddKeyValue(23, "D");
-        bst.AddKeyValue(21, "D");
+        bst.AddKeyValue(7, "C");
+        bst.AddKeyValue(34, "D");
+        bst.AddKeyValue(12, "E");
+        bst.AddKeyValue(17, "F");
+        bst.AddKeyValue(1, "G");
 
-        boolean res = bst.DeleteNodeByKey(21);
+        boolean res = bst.DeleteNodeByKey(10);
 
-        BSTFind<String> found = bst.FindNodeByKey(21);
+        BSTFind<String> found = bst.FindNodeByKey(10);
 
         assertThat(res).isTrue();
         assertThat(found.NodeHasKey).isFalse();
+        assertThat(testRootNode.LeftChild.NodeKey).isEqualTo(12);
     }
 }
