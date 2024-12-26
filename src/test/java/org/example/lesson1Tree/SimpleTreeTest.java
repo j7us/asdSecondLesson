@@ -10,8 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SimpleTreeTest {
 
     public SimpleTreeNode<Integer> defaultRootNode =  new SimpleTreeNode<>(1, null);
-    public SimpleTree<Integer> tree = new SimpleTree<>(defaultRootNode);;
-    public SimpleTree<Integer> emptyRootTree = new SimpleTree<>(null);;
+    public SimpleTree<Integer> tree = new SimpleTree<>(defaultRootNode);
 
     @BeforeEach
     void setTree() {

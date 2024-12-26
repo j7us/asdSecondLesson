@@ -48,9 +48,9 @@ class BST<T>
 
     public BSTFind<T> FindNodeByKey(int key)
     {
-       if (Root == null) {
+        if (Root == null) {
            return new BSTFind<>();
-       }
+        }
 
        return findNodeByKeyRecursive(Root, key);
     }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BSTTEst {
+public class BstTest {
 
     BSTNode<String> testRootNode = new BSTNode<>(15, "A", null);
 
@@ -37,7 +37,7 @@ public class BSTTEst {
     }
 
     @Test
-    void FindNodeByKeyRootFalssToLeftTest() {
+    void FindNodeByKeyRootFalseToLeftTest() {
         BST<String> bst = new BST<>(testRootNode);
 
         BSTFind<String> res = bst.FindNodeByKey(14);
@@ -209,21 +209,27 @@ public class BSTTEst {
 
     @Test
     void DeleteNodeByKeyWithLeafTest() {
-        BST<String> bst = new BST<>(testRootNode);
+        BST<String> bst = new BST<>(null);
 
-        bst.AddKeyValue(10, "B");
-        bst.AddKeyValue(7, "C");
-        bst.AddKeyValue(34, "D");
-        bst.AddKeyValue(12, "E");
-        bst.AddKeyValue(17, "F");
-        bst.AddKeyValue(1, "G");
+        bst.AddKeyValue(15, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(14, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(23, "A");
+        bst.AddKeyValue(21, "A");
+        bst.AddKeyValue(27, "A");
+        bst.AddKeyValue(22, "A");
+        bst.AddKeyValue(19, "A");
 
-        boolean res = bst.DeleteNodeByKey(10);
+        boolean res = bst.DeleteNodeByKey(17);
 
-        BSTFind<String> found = bst.FindNodeByKey(10);
+        BSTFind<String> found = bst.FindNodeByKey(17);
 
         assertThat(res).isTrue();
         assertThat(found.NodeHasKey).isFalse();
-        assertThat(testRootNode.LeftChild.NodeKey).isEqualTo(12);
+        assertThat(bst.Root.RightChild.NodeKey).isEqualTo(19);
+        assertThat(bst.Count()).isEqualTo(10);
     }
 }
