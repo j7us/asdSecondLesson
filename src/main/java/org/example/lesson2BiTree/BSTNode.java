@@ -155,8 +155,12 @@ class BST<T>
 
         replacement.Parent = parent;
 
-        replacement.LeftChild = delete.LeftChild == replacement ? null : delete.LeftChild;
-        replacement.RightChild = delete.RightChild == replacement ? null : delete.RightChild;
+        if (delete.LeftChild == replacement) {
+            return;
+        }
+
+        replacement.LeftChild = delete.LeftChild;
+        replacement.RightChild = delete.RightChild;
 
         if (replacement.LeftChild != null) {
             replacement.LeftChild.Parent = replacement;
@@ -177,13 +181,11 @@ class BST<T>
     }
 
     private void swapNodeWithChildIfExists(BSTNode<T> node, BSTNode<T> nodeChild) {
-        if (nodeChild == null) {
-            return;
-        }
-
         BSTNode<T> nodeParent = node.Parent;
 
-        nodeChild.Parent = nodeParent;
+        if (nodeChild != null) {
+            nodeChild.Parent = nodeParent;
+        }
 
         replaceParentChild(nodeParent, node, nodeChild);
     }

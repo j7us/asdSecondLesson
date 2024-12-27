@@ -230,5 +230,6 @@ public class BstTest {
         assertThat(res).isTrue();
         assertThat(found.NodeHasKey).isFalse();
         assertThat(bst.Root.RightChild.NodeKey).isEqualTo(19);
+        assertThat(bst.Count()).isEqualTo(10);
     }
 }
