@@ -3,6 +3,8 @@ package org.example.lesson2BiTree;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BstTest {
@@ -231,5 +233,97 @@ public class BstTest {
         assertThat(found.NodeHasKey).isFalse();
         assertThat(bst.Root.RightChild.NodeKey).isEqualTo(19);
         assertThat(bst.Count()).isEqualTo(10);
+    }
+
+    @Test
+    void WideAllNodesTest() {
+        BST<String> bst = new BST<>(null);
+
+        bst.AddKeyValue(15, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(13, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(14, "A");
+
+        ArrayList<BSTNode> bstNodes = bst.WideAllNodes();
+
+        assertThat(bstNodes.size()).isEqualTo(7);
+    }
+
+    @Test
+    void DeepAllNodesRootTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        ArrayList<BSTNode> bstNodes = bst.DeepAllNodes(0);
+
+        assertThat(bstNodes.size()).isEqualTo(1);
+    }
+
+    @Test
+    void DeepAllNodesEmptyTest() {
+        BST<String> bst = new BST<>(null);
+
+        ArrayList<BSTNode> bstNodes = bst.DeepAllNodes(0);
+
+        assertThat(bstNodes.isEmpty()).isTrue();
+    }
+
+    @Test
+    void DeepAllNodesTest() {
+        BST<String> bst = new BST<>(null);
+
+        bst.AddKeyValue(15, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(13, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(14, "A");
+
+        ArrayList<BSTNode> bstNodes = bst.DeepAllNodes(0);
+
+        assertThat(bstNodes.size()).isEqualTo(7);
+        assertThat(bstNodes.get(0).NodeKey).isEqualTo(7);
+        assertThat(bstNodes.get(bstNodes.size() - 1).NodeKey).isEqualTo(17);
+    }
+
+    @Test
+    void DeepAllNodesPostOrderTest() {
+        BST<String> bst = new BST<>(null);
+
+        bst.AddKeyValue(15, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(13, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(14, "A");
+
+        ArrayList<BSTNode> bstNodes = bst.DeepAllNodes(1);
+
+        assertThat(bstNodes.size()).isEqualTo(7);
+        assertThat(bstNodes.get(0).NodeKey).isEqualTo(7);
+        assertThat(bstNodes.get(bstNodes.size() - 1).NodeKey).isEqualTo(15);
+    }
+
+    @Test
+    void DeepAllNodesPreOrderTest() {
+        BST<String> bst = new BST<>(null);
+
+        bst.AddKeyValue(15, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(13, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(14, "A");
+
+        ArrayList<BSTNode> bstNodes = bst.DeepAllNodes(2);
+
+        assertThat(bstNodes.size()).isEqualTo(7);
+        assertThat(bstNodes.get(0).NodeKey).isEqualTo(15);
+        assertThat(bstNodes.get(bstNodes.size() - 1).NodeKey).isEqualTo(16);
     }
 }

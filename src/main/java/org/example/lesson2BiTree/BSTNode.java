@@ -211,6 +211,80 @@ class BST<T>
         return 1 + countRecursive(node.LeftChild) + countRecursive(node.RightChild);
     }
 
+    public ArrayList<BSTNode> WideAllNodes() {
+        ArrayList<BSTNode> result = new ArrayList<>();
+        Queue<BSTNode> nodes = new ArrayDeque<>();
+        if (Root == null) {
+            return result;
+        }
+
+        nodes.add(Root);
+
+        for (BSTNode node = nodes.poll(); node != null; node = nodes.poll()) {
+            if (node.LeftChild != null) {
+                nodes.add(node.LeftChild);
+            }
+
+            if (node.RightChild != null) {
+                nodes.add(node.RightChild);
+            }
+
+            result.add(node);
+        }
+
+        return result;
+    }
+
+    public ArrayList<BSTNode> DeepAllNodes(int type) {
+        ArrayList<BSTNode> result = new ArrayList<>();
+
+        if (Root == null)
+            type = -1;
+
+        return switch (type) {
+            case 0 -> deepAllNodesInOrder(result, Root);
+            case 1 -> deepAllNodesPostOrder(result, Root);
+            case 2 -> deepAllNodesPreOrder(result, Root);
+            default -> result;
+        };
+    }
+
+    private ArrayList<BSTNode> deepAllNodesInOrder(ArrayList<BSTNode> result, BSTNode node) {
+        if (node == null) {
+            return result;
+        }
+
+        deepAllNodesInOrder(result, node.LeftChild);
+        result.add(node);
+        deepAllNodesInOrder(result, node.RightChild);
+
+        return result;
+    }
+
+    private ArrayList<BSTNode> deepAllNodesPostOrder(ArrayList<BSTNode> result, BSTNode node) {
+        if (node == null) {
+            return result;
+        }
+
+        deepAllNodesPostOrder(result, node.LeftChild);
+        deepAllNodesPostOrder(result, node.RightChild);
+        result.add(node);
+
+        return result;
+    }
+
+    private ArrayList<BSTNode> deepAllNodesPreOrder(ArrayList<BSTNode> result, BSTNode node) {
+        if (node == null) {
+            return result;
+        }
+
+        result.add(node);
+        deepAllNodesPreOrder(result, node.LeftChild);
+        deepAllNodesPreOrder(result, node.RightChild);
+
+        return result;
+    }
+
     public boolean isEqualToAnotherTree(BST<T> anotherTree) {
         return isEqualToAnotherTreeRecursive(Root, anotherTree.Root);
     }
