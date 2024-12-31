@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -325,5 +326,135 @@ public class BstTest {
         assertThat(bstNodes.size()).isEqualTo(7);
         assertThat(bstNodes.get(0).NodeKey).isEqualTo(15);
         assertThat(bstNodes.get(bstNodes.size() - 1).NodeKey).isEqualTo(16);
+    }
+
+    @Test
+    void isTreesEqualsEmptyTest() {
+        BST<String> bst1 = new BST<>(null);
+        BST<String> bst2 = new BST<>(null);
+
+        boolean res = bst1.isTreesEquals(bst2);
+
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    void isTreesEqualsTrueTest() {
+        BST<String> bst1 = new BST<>(null);
+
+        bst1.AddKeyValue(7, "A");
+        bst1.AddKeyValue(1, "A");
+        bst1.AddKeyValue(11, "A");
+        bst1.AddKeyValue(5, "A");
+        bst1.AddKeyValue(6, "A");
+        bst1.AddKeyValue(12, "A");
+
+        BST<String> bst2 = new BST<>(null);
+
+        bst2.AddKeyValue(7, "A");
+        bst2.AddKeyValue(1, "A");
+        bst2.AddKeyValue(11, "A");
+        bst2.AddKeyValue(5, "A");
+        bst2.AddKeyValue(6, "A");
+        bst2.AddKeyValue(12, "A");
+
+        boolean res = bst1.isTreesEquals(bst2);
+
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    void isTreesEqualsFalseTest() {
+        BST<String> bst1 = new BST<>(null);
+
+        bst1.AddKeyValue(7, "A");
+        bst1.AddKeyValue(1, "A");
+        bst1.AddKeyValue(11, "A");
+        bst1.AddKeyValue(5, "A");
+        bst1.AddKeyValue(6, "A");
+        bst1.AddKeyValue(12, "A");
+
+        BST<String> bst2 = new BST<>(null);
+
+        bst2.AddKeyValue(7, "A");
+        bst2.AddKeyValue(1, "A");
+        bst2.AddKeyValue(14, "A");
+        bst2.AddKeyValue(5, "A");
+        bst2.AddKeyValue(6, "A");
+        bst2.AddKeyValue(12, "A");
+
+        boolean res = bst1.isTreesEquals(bst2);
+
+        assertThat(res).isFalse();
+    }
+
+    @Test
+    void findAllPathWithLengthEmptyTest() {
+        BST<String> bst = new BST<>(null);
+
+        List<List<BSTNode<String>>> res = bst.findAllPathWithLength(3);
+
+        assertThat(res.isEmpty()).isTrue();
+    }
+
+    @Test
+    void findAllPathWithLengthRootTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        List<List<BSTNode<String>>> res = bst.findAllPathWithLength(3);
+
+        assertThat(res.isEmpty()).isTrue();
+    }
+
+    @Test
+    void findAllPathWithLengthTest() {
+        BST<String> bst = new BST<>(null);
+
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(1, "A");
+        bst.AddKeyValue(-5, "A");
+        bst.AddKeyValue(11, "A");
+        bst.AddKeyValue(5, "A");
+        bst.AddKeyValue(6, "A");
+        bst.AddKeyValue(12, "A");
+
+        List<List<BSTNode<String>>> res = bst.findAllPathWithLength(3);
+
+        assertThat(res.size()).isEqualTo(2);
+    }
+
+    @Test
+    void findAllPathWithMaxValueEmptyTest() {
+        BST<Integer> bst = new BST<>(null);
+
+        List<List<BSTNode<Integer>>> res = bst.findAllPathWithMaxValue();
+
+        assertThat(res.isEmpty()).isTrue();
+    }
+
+    @Test
+    void findAllPathWithMaxValueRootTest() {
+        BST<Integer> bst = new BST<>(new BSTNode<>(15,15, null));
+
+        List<List<BSTNode<Integer>>> res = bst.findAllPathWithMaxValue();
+
+        assertThat(res.size()).isEqualTo(1);
+    }
+
+    @Test
+    void findAllPathWithMaxValueTest() {
+        BST<Integer> bst = new BST<>(null);
+
+        bst.AddKeyValue(7, 1);
+        bst.AddKeyValue(1, 1);
+        bst.AddKeyValue(-5, 2);
+        bst.AddKeyValue(11, 15);
+        bst.AddKeyValue(5, 1);
+        bst.AddKeyValue(6, 17);
+        bst.AddKeyValue(12, 4);
+
+        List<List<BSTNode<Integer>>> res = bst.findAllPathWithMaxValue();
+
+        assertThat(res.size()).isEqualTo(2);
     }
 }

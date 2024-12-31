@@ -285,32 +285,141 @@ class BST<T>
         return result;
     }
 
-    public boolean isEqualToAnotherTree(BST<T> anotherTree) {
-        return isEqualToAnotherTreeRecursive(Root, anotherTree.Root);
+    public boolean isTreesEquals(BST<T> comparedTree) {
+        if (Root == null && comparedTree.Root == null) {
+            return  true;
+        }
+
+        ArrayDeque<BSTNode<T>> firstTreeNodes = new ArrayDeque<>();
+        firstTreeNodes.add(Root);
+
+        ArrayDeque<BSTNode<T>> secondTreeNodes = new ArrayDeque<>();
+        secondTreeNodes.add(comparedTree.Root);
+
+        return isTreesEqualsRecursive(firstTreeNodes, secondTreeNodes);
     }
 
-    private boolean isEqualToAnotherTreeRecursive(BSTNode<T> firstNode, BSTNode<T> secondNode) {
-        if (firstNode == null && secondNode == null) {
+    private boolean isTreesEqualsRecursive(ArrayDeque<BSTNode<T>> firstTreeNodes, ArrayDeque<BSTNode<T>> secondTreeNodes) {
+        BSTNode<T> first = firstTreeNodes.poll();
+        BSTNode<T> second = secondTreeNodes.poll();
+
+        if (first == null && second == null) {
             return true;
         }
 
-        if (!isNodesEquals(firstNode, secondNode)) {
+        if (!isNodesEquals(first, second)) {
             return false;
         }
 
-        return isEqualToAnotherTreeRecursive(firstNode.LeftChild, secondNode.LeftChild)
-                && isEqualToAnotherTreeRecursive(firstNode.RightChild, secondNode.RightChild);
+        addedChildToQueue(firstTreeNodes, first);
+        addedChildToQueue(secondTreeNodes, second);
+
+        return isTreesEqualsRecursive(firstTreeNodes, secondTreeNodes);
     }
 
-    private boolean isNodesEquals(BSTNode<T> firstNode, BSTNode<T> secondNode) {
-        if ((firstNode == null && secondNode != null) || (firstNode != null && secondNode == null)) {
+    private void addedChildToQueue(ArrayDeque<BSTNode<T>> nodesQueue, BSTNode<T> node) {
+        if (node.LeftChild != null) {
+            nodesQueue.add(node.LeftChild);
+        }
+
+        if (node.RightChild != null) {
+            nodesQueue.add(node.RightChild);
+        }
+    }
+
+    private boolean isNodesEquals(BSTNode<T> first, BSTNode<T> second) {
+        if (first == null || second == null) {
             return false;
         }
 
-        if (firstNode == null && secondNode == null) {
-            return true;
+        return first.NodeKey == second.NodeKey && Objects.equals(first.NodeValue, second.NodeValue);
+    }
+
+    public List<List<BSTNode<T>>> findAllPathWithLength(int length) {
+
+        List<List<BSTNode<T>>> paths = new ArrayList<>();
+
+        if (Root != null) {
+            findAllPathWithLengthRecursive(Root, new LinkedList<>(), paths, length);
         }
 
-        return firstNode.NodeKey == secondNode.NodeKey && Objects.equals(firstNode.NodeValue, secondNode.NodeValue);
+        return paths;
+    }
+
+    private void findAllPathWithLengthRecursive(BSTNode<T> node,
+                                                List<BSTNode<T>> path,
+                                                List<List<BSTNode<T>>> paths,
+                                                int length) {
+         if (length == 0) {
+             return;
+         }
+
+         path.add(node);
+
+         if (node.LeftChild == null && node.RightChild == null) {
+             if (length == 1) {
+                 paths.add(path);
+             }
+             return;
+         }
+
+         if (node.LeftChild != null) {
+             findAllPathWithLengthRecursive(node.LeftChild, new LinkedList<>(path), paths, length - 1);
+         }
+
+        if (node.RightChild != null) {
+            findAllPathWithLengthRecursive(node.RightChild, new LinkedList<>(path), paths, length - 1);
+        }
+    }
+
+    public List<List<BSTNode<T>>> findAllPathWithMaxValue() {
+        TreeMap<Integer, List<List<BSTNode<T>>>> pathsWithMaxValue = new TreeMap<>();
+
+        if (Root != null) {
+            findAllPathWithMaxValueRecursive(Root, new LinkedList<>(), 0, pathsWithMaxValue);
+        }
+
+        Map.Entry<Integer, List<List<BSTNode<T>>>> result = pathsWithMaxValue.lastEntry();
+
+        return result == null ? new ArrayList<>() : result.getValue();
+    }
+
+    private void findAllPathWithMaxValueRecursive(BSTNode<T> node,
+                                                  List<BSTNode<T>> path,
+                                                  int sumValue,
+                                                  TreeMap<Integer, List<List<BSTNode<T>>>> pathsWithMaxValue) {
+        path.add(node);
+
+        if (node.LeftChild == null && node.RightChild == null) {
+            int key = sumValue + (Integer)node.NodeValue;
+            List<List<BSTNode<T>>> pathsWithValue = pathsWithMaxValue.get(key);
+
+            if (pathsWithValue == null) {
+                List<List<BSTNode<T>>> paths = new ArrayList<>();
+                paths.add(path);
+                pathsWithMaxValue.put(key, paths);
+            } else {
+                pathsWithValue.add(path);
+                pathsWithMaxValue.put(key, pathsWithValue);
+            }
+
+            return;
+        }
+
+        if (node.LeftChild != null) {
+            findAllPathWithMaxValueRecursive(
+                    node.LeftChild,
+                    new ArrayList<>(path),
+                    sumValue + (Integer)node.NodeValue,
+                    pathsWithMaxValue);
+        }
+
+        if (node.RightChild != null) {
+            findAllPathWithMaxValueRecursive(
+                    node.RightChild,
+                    new ArrayList<>(path),
+                    sumValue + (Integer)node.NodeValue,
+                    pathsWithMaxValue);
+        }
     }
 }
