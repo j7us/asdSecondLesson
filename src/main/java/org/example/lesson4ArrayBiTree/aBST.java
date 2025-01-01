@@ -9,17 +9,13 @@ class aBST
     public aBST(int depth)
     {
         // правильно рассчитайте размер массива для дерева глубины depth:
-        int tree_size = depth * 2 + 1;
+        int tree_size = (int)Math.pow(2, (depth + 1)) - 1;
         Tree = new Integer[ tree_size ];
         for(int i=0; i<tree_size; i++) Tree[i] = null;
     }
 
     public Integer FindKeyIndex(int key)
     {
-        if (Tree[0] == null) {
-            return 0;
-        }
-
         return findKeyIndexRecursive(key, 0);
     }
 
@@ -28,20 +24,20 @@ class aBST
             return null;
         }
 
-        Integer node = Tree[index];
+        Integer keyNode = Tree[index];
 
-        if (node == null) {
+        if (keyNode == null) {
             return index * (-1);
         }
 
-        if (node == key) {
+        if (keyNode == key) {
             return index;
-        } else {
-            int nextIndex = node > key
-                    ? 2 * index + 1
-                    : 2 * index + 2;
-            return findKeyIndexRecursive(key, nextIndex);
         }
+
+        int nextIndex = keyNode > key
+                ? 2 * index + 1
+                : 2 * index + 2;
+        return findKeyIndexRecursive(key, nextIndex);
     }
 
     public int AddKey(int key)
@@ -53,7 +49,8 @@ class aBST
         }
 
         if (!(insertIndex > 0)) {
-            Tree[insertIndex * (-1)] = key;
+            insertIndex = insertIndex * (-1);
+            Tree[insertIndex] = key;
         }
 
         return insertIndex;
