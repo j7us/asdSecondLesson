@@ -422,4 +422,103 @@ class BST<T>
                     pathsWithMaxValue);
         }
     }
+
+    public void invertTree() {
+        invertTreeRecursive(Root);
+    }
+
+    private void invertTreeRecursive(BSTNode<T> node) {
+        if (node == null) {
+            return;
+        }
+
+        BSTNode<T> right = node.RightChild;
+        node.RightChild = node.LeftChild;
+        node.LeftChild = right;
+
+        invertTreeRecursive(node.LeftChild);
+        invertTreeRecursive(node.RightChild);
+    }
+
+    public int findLevelWithMaxSumValue() {
+        if (Root == null) {
+            return -1;
+        }
+
+        Queue<BSTNode<T>> nodes = new ArrayDeque<>();
+        nodes.add(Root);
+
+        return findLevelWithMaxSumValueRecursive(nodes, -1, 0, (Integer)Root.NodeValue);
+    }
+
+    private int findLevelWithMaxSumValueRecursive(Queue<BSTNode<T>> nodes, int prevLevel, int levelWithMax, int maxValue) {
+        if (nodes.isEmpty()) {
+            return levelWithMax;
+        }
+
+        int currentLevel = prevLevel + 1;
+        int countNode = nodes.size();
+        Integer sumValue = 0;
+
+        for (int i = 0; i < countNode; i++) {
+            BSTNode<T> node = nodes.poll();
+            sumValue += (Integer)node.NodeValue;
+
+            if (node.LeftChild != null) {
+                nodes.add(node.LeftChild);
+            }
+
+            if (node.RightChild != null) {
+                nodes.add(node.RightChild);
+            }
+        }
+
+        boolean isNewMaxLevel = sumValue > maxValue;
+
+        return findLevelWithMaxSumValueRecursive(
+                nodes,
+                currentLevel,
+                isNewMaxLevel ? currentLevel : levelWithMax,
+                isNewMaxLevel ? sumValue : maxValue
+        );
+    }
+
+    public static <A> BST<A> buildTreeFromOrder(ArrayList<BSTNode<A>> preOrder, ArrayList<BSTNode<A>> infOrder) {
+        BSTNode<A> root = buildTreeFromOrderRecursive(
+                preOrder,
+                0,
+                infOrder,
+                0,
+                infOrder.size() - 1
+        );
+
+        return new BST<>(root);
+    }
+
+    private static <A> BSTNode<A> buildTreeFromOrderRecursive(ArrayList<BSTNode<A>> preOrder,
+                                                   int preStart,
+                                                   ArrayList<BSTNode<A>> infOrder,
+                                                   int infStart,
+                                                   int infEnd) {
+        if (infStart > infEnd) {
+            return null;
+        }
+
+        BSTNode<A> parentNode = preOrder.get(preStart);
+
+        int left = infOrder.indexOf(parentNode);
+
+        parentNode.LeftChild = buildTreeFromOrderRecursive(preOrder, preStart + 1, infOrder, infStart, left - 1);
+        parentNode.RightChild = buildTreeFromOrderRecursive(preOrder, preStart + (left - infStart) + 1, infOrder, left + 1, infEnd);
+
+        if (parentNode.LeftChild != null) {
+            parentNode.LeftChild.Parent = parentNode;
+        }
+
+        if (parentNode.RightChild != null) {
+            parentNode.RightChild.Parent = parentNode;
+        }
+
+        return parentNode;
+    }
 }

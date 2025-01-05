@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -456,5 +457,93 @@ public class BstTest {
         List<List<BSTNode<Integer>>> res = bst.findAllPathWithMaxValue();
 
         assertThat(res.size()).isEqualTo(2);
+    }
+
+    @Test
+    void invertTreeEmptyTest() {
+        BST<Integer> bst = new BST<>(null);
+
+        bst.invertTree();
+    }
+
+    @Test
+    void invertTreeRootTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.invertTree();
+    }
+
+    @Test
+    void invertTreeTest() {
+        BST<String> bst = new BST<>(testRootNode);
+        bst.AddKeyValue(10, "A");
+        bst.AddKeyValue(5, "A");
+        bst.AddKeyValue(12, "A");
+        bst.AddKeyValue(1, "A");
+        bst.AddKeyValue(7, "A");
+        bst.AddKeyValue(11, "A");
+        bst.AddKeyValue(14, "A");
+        bst.AddKeyValue(20, "A");
+        bst.AddKeyValue(17, "A");
+        bst.AddKeyValue(25, "A");
+        bst.AddKeyValue(16, "A");
+        bst.AddKeyValue(19, "A");
+
+        bst.invertTree();
+
+        assertThat(bst.Root.RightChild.NodeKey).isEqualTo(10);
+    }
+
+    @Test
+    void findLevelWithMaxSumValueEmptyTest() {
+        BST<String> bst = new BST<>(null);
+
+        int res = bst.findLevelWithMaxSumValue();
+
+        assertThat(res).isEqualTo(-1);
+    }
+
+    @Test
+    void findLevelWithMaxSumValueRootTest() {
+        BST<Integer> bst = new BST<>(null);
+        bst.AddKeyValue(15, 10);
+
+        int res = bst.findLevelWithMaxSumValue();
+
+        assertThat(res).isEqualTo(0);
+    }
+
+    @Test
+    void findLevelWithMaxSumValueTest() {
+        BST<Integer> bst = new BST<>(null);
+        bst.AddKeyValue(15, 10);
+        bst.AddKeyValue(10, 100);
+        bst.AddKeyValue(20, 10);
+        bst.AddKeyValue(5, 10);
+        bst.AddKeyValue(12, 10);
+        bst.AddKeyValue(25, 10);
+
+        int res = bst.findLevelWithMaxSumValue();
+
+        assertThat(res).isEqualTo(1);
+    }
+
+    @Test
+    void buildTreeFromOrderTest() {
+        BSTNode<String> n1 = new BSTNode<>(1, "A", null);
+        BSTNode<String> n2 = new BSTNode<>(2, "A", null);
+        BSTNode<String> n3 = new BSTNode<>(3, "A", null);
+        BSTNode<String> n4 = new BSTNode<>(4, "A", null);
+        BSTNode<String> n5 = new BSTNode<>(5, "A", null);
+        BSTNode<String> n6 = new BSTNode<>(6, "A", null);
+        BSTNode<String> n7 = new BSTNode<>(7, "A", null);
+
+        ArrayList pre = new ArrayList<>(Arrays.asList(n1, n2, n4, n5, n3, n6, n7));
+
+        ArrayList inf = new ArrayList<>(Arrays.asList(n4, n2, n5, n1, n6, n3, n7));
+
+        BST<String> bst = BST.buildTreeFromOrder(pre, inf);
+
+        assertThat(bst.Root.NodeKey).isEqualTo(1);
     }
 }
