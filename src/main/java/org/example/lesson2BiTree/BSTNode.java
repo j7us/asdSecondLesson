@@ -484,10 +484,16 @@ class BST<T>
     }
 
     public static <A> BST<A> buildTreeFromOrder(ArrayList<BSTNode<A>> preOrder, ArrayList<BSTNode<A>> infOrder) {
+        Map<BSTNode<A>, Integer> infMap = new HashMap<>();
+
+        for (int i = 0; i < infOrder.size(); i++) {
+            infMap.put(infOrder.get(i), i);
+        }
+
         BSTNode<A> root = buildTreeFromOrderRecursive(
                 preOrder,
                 0,
-                infOrder,
+                infMap,
                 0,
                 infOrder.size() - 1
         );
@@ -496,20 +502,20 @@ class BST<T>
     }
 
     private static <A> BSTNode<A> buildTreeFromOrderRecursive(ArrayList<BSTNode<A>> preOrder,
-                                                   int preStart,
-                                                   ArrayList<BSTNode<A>> infOrder,
-                                                   int infStart,
-                                                   int infEnd) {
+                                                              int preStart,
+                                                              Map<BSTNode<A>, Integer> infMap,
+                                                              int infStart,
+                                                              int infEnd) {
         if (infStart > infEnd) {
             return null;
         }
 
         BSTNode<A> parentNode = preOrder.get(preStart);
 
-        int left = infOrder.indexOf(parentNode);
+        int left = infMap.get(parentNode);
 
-        parentNode.LeftChild = buildTreeFromOrderRecursive(preOrder, preStart + 1, infOrder, infStart, left - 1);
-        parentNode.RightChild = buildTreeFromOrderRecursive(preOrder, preStart + (left - infStart) + 1, infOrder, left + 1, infEnd);
+        parentNode.LeftChild = buildTreeFromOrderRecursive(preOrder, preStart + 1, infMap, infStart, left - 1);
+        parentNode.RightChild = buildTreeFromOrderRecursive(preOrder, preStart + (left - infStart) + 1, infMap, left + 1, infEnd);
 
         if (parentNode.LeftChild != null) {
             parentNode.LeftChild.Parent = parentNode;
