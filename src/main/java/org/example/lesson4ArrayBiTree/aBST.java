@@ -55,4 +55,42 @@ class aBST
 
         return insertIndex;
     }
+
+    public int findLCA(int firstKey, int secondKey) {
+        for (int index = 0; index < Tree.length;) {
+            Integer curKey = Tree[index];
+
+            int nextFirst = findNextIndex(curKey, index, firstKey);
+
+            if (nextFirst != findNextIndex(curKey, index, secondKey)) {
+                return index;
+            }
+
+            index = nextFirst;
+        }
+
+        return -1;
+    }
+
+    private int findNextIndex(int key, int index, int find) {
+        if (key == find) {
+            return index;
+        }
+
+        int nextIndPlus = key > find ? 1 : 2;
+
+        return 2 * index + nextIndPlus;
+    }
+
+    public ArrayList<Integer> WideAllNodes() {
+        ArrayList<Integer> result = new ArrayList<>();
+
+        for (int treeIndex = 0; treeIndex < Tree.length; treeIndex++) {
+            if (Tree[treeIndex] != null) {
+                result.add(Tree[treeIndex]);
+            }
+        }
+
+        return result;
+    }
 }
