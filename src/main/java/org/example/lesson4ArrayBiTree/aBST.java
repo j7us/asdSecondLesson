@@ -57,19 +57,18 @@ class aBST
     }
 
     public int findLCA(int firstKey, int secondKey) {
-        for (int index = 0; index < Tree.length;) {
-            Integer curKey = Tree[index];
+        Integer firstInd = FindKeyIndex(firstKey);
+        Integer secondInd = FindKeyIndex(secondKey);
 
-            int nextFirst = findNextIndex(curKey, index, firstKey);
+        return findLcaRecursive(firstInd, secondInd);
+    }
 
-            if (nextFirst != findNextIndex(curKey, index, secondKey)) {
-                return index;
-            }
-
-            index = nextFirst;
+    public int findLcaRecursive(int firstInd, int secondInd) {
+        if (firstInd == secondInd) {
+            return firstInd;
         }
 
-        return -1;
+        return findLcaRecursive((firstInd - 1) / 2, (secondInd - 1) / 2);
     }
 
     private int findNextIndex(int key, int index, int find) {

@@ -1,8 +1,13 @@
 package org.example.lesson4ArrayBiTree;
 
+import com.code_intelligence.jazzer.api.FuzzedDataProvider;
+import com.code_intelligence.jazzer.junit.FuzzTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Queue;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,9 +77,9 @@ public class aBSTTest {
         tree.AddKey(16);
         tree.AddKey(25);
 
-        int res = tree.findLCA(14, 25);
+        int res = tree.findLCA(16, 25);
 
-        assertThat(res).isEqualTo(0);
+        assertThat(res).isEqualTo(2);
     }
 
     @Test
@@ -91,5 +96,51 @@ public class aBSTTest {
         ArrayList<Integer> res = tree.WideAllNodes();
 
         assertThat(res.size()).isEqualTo(6);
+    }
+
+    @FuzzTest(maxDuration = "2m")
+    void WideAllNodesFuzz(FuzzedDataProvider data) {
+        int size = data.consumeInt(0, 5);
+
+        aBST tree = new aBST(size);
+
+        int[] ints = data.consumeInts(63);
+
+        for (int key : ints) {
+            tree.AddKey(key);
+        }
+
+        ArrayList<Integer> res = tree.WideAllNodes();
+
+        if (res.size() > 1 && !isWideCorrect(tree.Tree, new ArrayDeque<>(Arrays.asList(0)), res, 0)) {
+            throw new RuntimeException("Wide not correct");
+        }
+    }
+
+    boolean isWideCorrect(Integer[] tree, Queue<Integer> treeWideInd, ArrayList<Integer> wideRes, int wideResInd) {
+        if ((treeWideInd.peek() == null || treeWideInd.peek() >= tree.length ) && wideResInd >= wideRes.size()) {
+            return true;
+        }
+
+        int LevelSize = treeWideInd.size();
+
+        for (int i = 0; i < LevelSize; i++) {
+            Integer treeInd = treeWideInd.poll();
+
+            if(tree[treeInd] == null) {
+                continue;
+            }
+
+            if (tree[treeInd] != wideRes.get(wideResInd)) {
+                return false;
+            }
+
+            treeWideInd.add(2*treeInd + 1);
+            treeWideInd.add(2*treeInd + 2);
+
+            wideResInd++;
+        }
+
+        return isWideCorrect(tree, treeWideInd, wideRes, wideResInd);
     }
 }
