@@ -76,7 +76,7 @@ class aBST
             firstLevel--;
             firstInd = (firstInd - 1) / 2;
         } else if (secondLevel > firstLevel) {
-            secondInd = (firstInd - 1) / 2;
+            secondInd = (secondInd - 1) / 2;
             secondLevel--;
         } else {
             firstInd = (firstInd - 1) / 2;
