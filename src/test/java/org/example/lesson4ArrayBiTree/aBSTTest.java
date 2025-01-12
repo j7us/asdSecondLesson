@@ -144,4 +144,109 @@ public class aBSTTest {
 
         return isWideCorrect(tree, treeWideInd, wideRes, wideResInd);
     }
+
+    @Test
+    void DeleteNodeByKeyEmptyTest() {
+        aBST tree = new aBST(3);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isFalse();
+    }
+
+    @Test
+    void DeleteNodeByKeyRootTest() {
+        aBST tree = new aBST(0);
+
+        tree.AddKey(15);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[0]).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyLeafTest() {
+        aBST tree = new aBST(2);
+
+        tree.AddKey(15);
+        tree.AddKey(11);
+        tree.AddKey(19);
+        tree.AddKey(12);
+        tree.AddKey(16);
+        tree.AddKey(25);
+
+        boolean res = tree.DeleteNodeByKey(16);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[5]).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyLeftTest() {
+        aBST tree = new aBST(2);
+
+        tree.AddKey(15);
+        tree.AddKey(11);
+        tree.AddKey(12);
+        tree.AddKey(9);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[5]).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyRightTest() {
+        aBST tree = new aBST(2);
+
+        tree.AddKey(15);
+        tree.AddKey(11);
+        tree.AddKey(16);
+        tree.AddKey(12);
+        tree.AddKey(9);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[2]).isNull();
+    }
+
+    @Test
+    void DeleteNodeByKeyRightWithChildTest() {
+        aBST tree = new aBST(2);
+
+        tree.AddKey(15);
+        tree.AddKey(11);
+        tree.AddKey(16);
+        tree.AddKey(25);
+        tree.AddKey(12);
+        tree.AddKey(9);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[2]).isEqualTo(25);
+    }
+
+    @Test
+    void DeleteNodeByKeyRightWithLeftChildTest() {
+        aBST tree = new aBST(4);
+
+        tree.AddKey(15);
+        tree.AddKey(11);
+        tree.AddKey(25);
+        tree.AddKey(21);
+        tree.AddKey(17);
+        tree.AddKey(19);
+        tree.AddKey(12);
+        tree.AddKey(9);
+
+        boolean res = tree.DeleteNodeByKey(15);
+
+        assertThat(res).isTrue();
+        assertThat(tree.Tree[2]).isEqualTo(25);
+    }
 }

@@ -97,4 +97,58 @@ class aBST
 
         return result;
     }
+
+    public boolean DeleteNodeByKey(int key) {
+        Integer insertIndex = FindKeyIndex(key);
+
+        if (!isKeyExistInTree(insertIndex)) {
+            return false;
+        }
+
+        boolean useLeftChild = (2 * insertIndex + 2) >= Tree.length || Tree[2 * insertIndex + 2] == null;
+
+        int replacementIndex = useLeftChild
+                ? 2 * insertIndex + 1
+                : findReplacementIndex(2 * insertIndex + 2);
+
+        if (replacementIndex >= Tree.length || Tree[replacementIndex] == null) {
+            Tree[insertIndex] = null;
+            return true;
+        }
+
+        if (useLeftChild) {
+            moveAllReplacementChildIfExists(replacementIndex, replacementIndex - insertIndex);
+        } else {
+            Tree[insertIndex] = Tree[replacementIndex];
+            Tree[replacementIndex] = null;
+            moveAllReplacementChildIfExists(2 * replacementIndex + 2, replacementIndex + 2);
+        }
+
+        return true;
+    }
+
+    private boolean isKeyExistInTree(Integer insertIndex) {
+        return insertIndex != null && (insertIndex > 0 || (insertIndex == 0 && Tree[insertIndex] != null));
+    }
+
+    private int findReplacementIndex(int replacementIndex) {
+        if (Tree[2 * replacementIndex + 1] == null) {
+
+            return replacementIndex;
+        }
+
+        return findReplacementIndex(2 * replacementIndex + 1);
+    }
+
+    private void moveAllReplacementChildIfExists(int index, int length) {
+        if (index >= Tree.length || Tree[index] == null) {
+            return;
+        }
+
+        Tree[index - length] = Tree[index];
+        Tree[index] = null;
+
+        moveAllReplacementChildIfExists(2 * index + 1, length * 2);
+        moveAllReplacementChildIfExists(2 * index + 2, length * 2);
+    }
 }
