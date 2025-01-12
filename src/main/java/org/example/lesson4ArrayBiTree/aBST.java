@@ -80,7 +80,7 @@ class aBST
             secondLevel--;
         } else {
             firstInd = (firstInd - 1) / 2;
-            secondInd = (firstInd - 1) / 2;
+            secondInd = (secondInd - 1) / 2;
         }
 
         return findLcaRecursive(firstInd, firstLevel, secondInd, secondLevel);

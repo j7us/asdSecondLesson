@@ -68,18 +68,19 @@ public class aBSTTest {
 
     @Test
     void findLCAEmptyTest() {
-        aBST tree = new aBST(2);
+        aBST tree = new aBST(3);
 
         tree.AddKey(15);
         tree.AddKey(11);
         tree.AddKey(19);
         tree.AddKey(14);
+        tree.AddKey(17);
         tree.AddKey(16);
         tree.AddKey(25);
 
-        int res = tree.findLCA(15, 19);
+        int res = tree.findLCA(16, 25);
 
-        assertThat(res).isEqualTo(0);
+        assertThat(res).isEqualTo(2);
     }
 
     @Test
