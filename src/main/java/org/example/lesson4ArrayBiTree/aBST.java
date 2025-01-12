@@ -86,16 +86,6 @@ class aBST
         return findLcaRecursive(firstInd, firstLevel, secondInd, secondLevel);
     }
 
-    private int findNextIndex(int key, int index, int find) {
-        if (key == find) {
-            return index;
-        }
-
-        int nextIndPlus = key > find ? 1 : 2;
-
-        return 2 * index + nextIndPlus;
-    }
-
     public ArrayList<Integer> WideAllNodes() {
         ArrayList<Integer> result = new ArrayList<>();
 
