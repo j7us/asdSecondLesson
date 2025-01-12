@@ -60,15 +60,30 @@ class aBST
         Integer firstInd = FindKeyIndex(firstKey);
         Integer secondInd = FindKeyIndex(secondKey);
 
-        return findLcaRecursive(firstInd, secondInd);
+        return findLcaRecursive(
+                firstInd,
+                (int)Math.floor(Math.log(firstInd + 1) / Math.log(2)),
+                secondInd,
+                (int)Math.floor(Math.log(secondInd + 1) / Math.log(2)));
     }
 
-    public int findLcaRecursive(int firstInd, int secondInd) {
+    public int findLcaRecursive(int firstInd, int firstLevel, int secondInd, int secondLevel) {
         if (firstInd == secondInd) {
             return firstInd;
         }
 
-        return findLcaRecursive((firstInd - 1) / 2, (secondInd - 1) / 2);
+        if (firstLevel > secondLevel) {
+            firstLevel--;
+            firstInd = (firstInd - 1) / 2;
+        } else if (secondLevel > firstLevel) {
+            secondInd = (firstInd - 1) / 2;
+            secondLevel--;
+        } else {
+            firstInd = (firstInd - 1) / 2;
+            secondInd = (firstInd - 1) / 2;
+        }
+
+        return findLcaRecursive(firstInd, firstLevel, secondInd, secondLevel);
     }
 
     private int findNextIndex(int key, int index, int find) {

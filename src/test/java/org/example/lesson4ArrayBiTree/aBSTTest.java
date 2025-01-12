@@ -77,9 +77,9 @@ public class aBSTTest {
         tree.AddKey(16);
         tree.AddKey(25);
 
-        int res = tree.findLCA(16, 25);
+        int res = tree.findLCA(15, 19);
 
-        assertThat(res).isEqualTo(2);
+        assertThat(res).isEqualTo(0);
     }
 
     @Test
