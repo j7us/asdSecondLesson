@@ -57,6 +57,34 @@ class BalancedBST
         return startIndex == 0 ? endIndex : startIndex;
     }
 
+    public boolean validateTree() {
+        return validateTreeRecursive(Root);
+    }
+
+    public boolean validateTreeRecursive(BSTNode node) {
+        if (node == null || (node.LeftChild == null && node.RightChild == null)) {
+            return true;
+        }
+
+        if (!isRightRelationWithChild(node)) {
+            return false;
+        }
+
+        return validateTreeRecursive(node.LeftChild) && validateTreeRecursive(node.RightChild);
+    }
+
+    private boolean isRightRelationWithChild(BSTNode node) {
+        if (node.LeftChild != null && node.NodeKey <= node.LeftChild.NodeKey) {
+            return false;
+        }
+
+        if (node.RightChild != null && node.NodeKey > node.RightChild.NodeKey) {
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean IsBalanced(BSTNode root_node)
     {
         if (Root == null) {

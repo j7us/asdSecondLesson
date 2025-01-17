@@ -18,6 +18,47 @@ public class BalancedBSTTest {
     }
 
     @Test
+    void validateTreeEmptyTest() {
+        BalancedBST tree = new BalancedBST();
+        boolean res = tree.validateTree();
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    void validateTreeRootTest() {
+        BalancedBST tree = new BalancedBST();
+        tree.Root = new BSTNode(15, null);
+
+        boolean res = tree.validateTree();
+
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    void validateTreeTrueTest() {
+        BalancedBST tree = new BalancedBST();
+        int[] test = new int[]{10,15,25};
+        tree.GenerateTree(test);
+
+        boolean res = tree.validateTree();
+
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    void validateTreeFalseTest() {
+        BalancedBST tree = new BalancedBST();
+        int[] test = new int[]{10,15,25};
+        tree.GenerateTree(test);
+
+        tree.Root.LeftChild.LeftChild = new BSTNode(750, tree.Root.LeftChild);
+
+        boolean res = tree.validateTree();
+
+        assertThat(res).isFalse();
+    }
+
+    @Test
     void IsBalancedEmptyTest() {
         BalancedBST tree = new BalancedBST();
 
@@ -25,7 +66,7 @@ public class BalancedBSTTest {
     }
 
     @Test
-    void IsBalancedRoottest() {
+    void IsBalancedRootTest() {
         BalancedBST tree = new BalancedBST();
 
         int[] test = new int[]{10};
