@@ -18,6 +18,30 @@ public class BalancedBSTTest {
     }
 
     @Test
+    void levelTest() {
+        int[] test = new int[]{10,15,25,7,30,12};
+
+        BalancedBST tree = new BalancedBST();
+
+        tree.GenerateTree(test);
+
+        assertThat(allChildrenHasIncreaseLevel(tree.Root, 0)).isTrue();
+    }
+
+    boolean allChildrenHasIncreaseLevel(BSTNode node, int level) {
+        if (node == null || (node.LeftChild == null && node.RightChild == null)) {
+            return true;
+        }
+
+        if (node.Level != level) {
+            return false;
+        }
+
+        return allChildrenHasIncreaseLevel(node.LeftChild, level + 1)
+                && allChildrenHasIncreaseLevel(node.RightChild, level + 1);
+    }
+
+    @Test
     void validateTreeEmptyTest() {
         BalancedBST tree = new BalancedBST();
         boolean res = tree.validateTree();
