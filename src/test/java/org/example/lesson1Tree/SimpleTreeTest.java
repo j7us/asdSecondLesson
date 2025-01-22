@@ -3,6 +3,8 @@ package org.example.lesson1Tree;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -155,5 +157,80 @@ public class SimpleTreeTest {
         boolean result = tree.isTreeSymmetrical();
 
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void EvenTreesEmptyTest() {
+        SimpleTree<Integer> emptyTree = new SimpleTree<>(null);
+
+        ArrayList<Integer> res = emptyTree.EvenTrees();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void EvenTreesRootTest() {
+        ArrayList<Integer> res = tree.EvenTrees();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void EvenTreesSuccessTest() {
+        SimpleTreeNode<Integer> node = new SimpleTreeNode<>(2, null);
+        SimpleTreeNode<Integer> secondNode = new SimpleTreeNode<>(4, null);
+        SimpleTreeNode<Integer> leafNode = new SimpleTreeNode<>(3, null);
+
+        tree.AddChild(defaultRootNode, node);
+        tree.AddChild(defaultRootNode, secondNode);
+        tree.AddChild(node, leafNode);
+
+        ArrayList<Integer> res = tree.EvenTrees();
+
+        assertThat(res).isEqualTo(new ArrayList<>(Arrays.asList(1, 2)));
+    }
+
+    @Test
+    void EvenTreesFalseTest() {
+        SimpleTreeNode<Integer> node = new SimpleTreeNode<>(2, null);
+        SimpleTreeNode<Integer> secondNode = new SimpleTreeNode<>(4, null);
+        SimpleTreeNode<Integer> leafNode = new SimpleTreeNode<>(3, null);
+        SimpleTreeNode<Integer> leafNode2 = new SimpleTreeNode<>(5, null);
+
+        tree.AddChild(defaultRootNode, node);
+        tree.AddChild(defaultRootNode, secondNode);
+        tree.AddChild(node, leafNode);
+        tree.AddChild(leafNode, leafNode2);
+
+        ArrayList<Integer> res = tree.EvenTrees();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void EvenTreesBigTreeTest() {
+        SimpleTreeNode<Integer> n2 = new SimpleTreeNode<>(2, null);
+        SimpleTreeNode<Integer> n3 = new SimpleTreeNode<>(3, null);
+        SimpleTreeNode<Integer> n4 = new SimpleTreeNode<>(4, null);
+        SimpleTreeNode<Integer> n5 = new SimpleTreeNode<>(5, null);
+        SimpleTreeNode<Integer> n6 = new SimpleTreeNode<>(6, null);
+        SimpleTreeNode<Integer> n7 = new SimpleTreeNode<>(7, null);
+        SimpleTreeNode<Integer> n8 = new SimpleTreeNode<>(8, null);
+        SimpleTreeNode<Integer> n9 = new SimpleTreeNode<>(9, null);
+        SimpleTreeNode<Integer> n10 = new SimpleTreeNode<>(10, null);
+
+        tree.AddChild(defaultRootNode, n2);
+        tree.AddChild(defaultRootNode, n3);
+        tree.AddChild(defaultRootNode, n4);
+        tree.AddChild(n2, n5);
+        tree.AddChild(n3, n6);
+        tree.AddChild(n3, n7);
+        tree.AddChild(n4, n8);
+        tree.AddChild(n6, n9);
+        tree.AddChild(n8, n10);
+
+        ArrayList<Integer> res = tree.EvenTrees();
+
+        assertThat(res).isEqualTo(new ArrayList<>(Arrays.asList(1,2,3,6,1,3,4,8)));
     }
 }

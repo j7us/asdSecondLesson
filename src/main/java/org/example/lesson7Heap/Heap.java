@@ -93,4 +93,67 @@ class Heap
         replaceNewKeyToRootIfNeeded(parentInd, (parentInd - 1) / 2);
     }
 
+    public boolean isHeapCorrect() {
+        return isHeapCorrectRecursive(0);
+    }
+
+    private boolean isHeapCorrectRecursive(int index) {
+        if (2 * index + 1 >= HeapArray.length) {
+            return true;
+        }
+
+        if (HeapArray[index] < HeapArray[2 * index + 1] || HeapArray[index] < HeapArray[2 * index + 2]) {
+            return false;
+        }
+
+        return isHeapCorrectRecursive(2 * index + 1) && isHeapCorrectRecursive(2 * index + 2);
+    }
+
+    public int find(int key) {
+        return findRecursive(0, key);
+    }
+
+    private int findRecursive(int index, int key) {
+        if (index >= HeapArray.length || HeapArray[index] < key) {
+            return -1;
+        }
+
+        if (HeapArray[index] == key) {
+            return index;
+        }
+
+        return Math.max(findRecursive(2 * index + 1, key), findRecursive(2 * index + 2, key));
+    }
+
+    public Heap combine(Heap second) {
+        Heap res = new Heap();
+
+        res.MakeHeap(new int[1], (int)Math.floor(Math.log(HeapArray.length + second.HeapArray.length)/Math.log(2)));
+
+        return fillHeapRecursive(res, second, -1, -1);
+    }
+
+    private Heap fillHeapRecursive(Heap result, Heap second, int savedFirst, int savedSecond) {
+        int maxFirst = savedFirst < 0 ? this.GetMax() : savedFirst;
+        int maxSecond = savedSecond < 0 ? second.GetMax() : savedSecond;
+
+        if (maxFirst < 0 && maxSecond < 0) {
+            return result;
+        }
+
+        boolean insertFirst;
+
+        if (maxFirst < 0 && maxSecond >= 0) {
+            result.Add(maxSecond);
+            insertFirst = false;
+        } else if (maxFirst >= 0 && maxSecond < 0) {
+            result.Add(maxFirst);
+            insertFirst = true;
+        } else {
+            insertFirst = maxFirst >= maxSecond;
+            result.Add(insertFirst ? maxFirst : maxSecond);
+        }
+
+        return fillHeapRecursive(result, second, insertFirst ? -1 : maxFirst, insertFirst ? maxSecond : -1);
+    }
 }

@@ -207,4 +207,37 @@ class SimpleTree<T>
 
         return isTreeSymmetricalRecursive(childNodes);
     }
+
+    public ArrayList<T> EvenTrees() {
+        ArrayList<T> removedEdge = new ArrayList<>();
+
+        if (Root == null) {
+            return removedEdge;
+        }
+
+        return EvenTreesRecursive(removedEdge, Root) % 2 == 0
+                ? removedEdge
+                : new ArrayList<>();
+    }
+
+    private int EvenTreesRecursive(ArrayList<T> resultList, SimpleTreeNode<T> node) {
+        if (node.Children == null) {
+            return 1;
+        }
+
+        int resultTreeNodesCount = 1;
+
+        for (SimpleTreeNode<T> children : node.Children) {
+            int subtreeNodesCount = EvenTreesRecursive(resultList, children);
+
+            if (subtreeNodesCount % 2 == 0) {
+                resultList.add(node.NodeValue);
+                resultList.add(children.NodeValue);
+            } else {
+                resultTreeNodesCount += subtreeNodesCount;
+            }
+        }
+
+        return resultTreeNodesCount;
+    }
 }
