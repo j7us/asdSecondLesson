@@ -6,6 +6,10 @@ class Heap
 {
     public int [] HeapArray; // хранит неотрицательные числа-ключи
     private int lastInd = 0;
+    private Integer lastMax = 0;
+    private int lastIndexMax = 0;
+    private int maxSelectedFromThisLevel = 0;
+    private int viewedLevel = 0;
 
     public Heap() { HeapArray = null; }
 
@@ -44,9 +48,10 @@ class Heap
         return root;
     }
 
-    public Integer GetMaxFromLevel(int level) {
-        int srartIndex = (int)Math.pow(2, level) - 1;
-        int endIndexInclude = 2 * srartIndex;
+    public Integer GetMaxFromLevel() {
+        int levelCount = (int)Math.pow(2, viewedLevel);
+        int srartIndex = levelCount - 1;
+        int endIndexInclude = Math.min(2 * srartIndex, lastInd);
 
         if (srartIndex >= HeapArray.length) {
             return null;
@@ -54,13 +59,49 @@ class Heap
 
         int maxValueOnLevel = HeapArray[srartIndex];
 
-        for (int i = srartIndex + 1; i <= endIndexInclude; i++) {
-            if (HeapArray[i] > maxValueOnLevel) {
+        if (maxSelectedFromThisLevel != 0) {
+            srartIndex = findIndexWithValueLessThenMax(srartIndex, endIndexInclude);
+            maxValueOnLevel = HeapArray[srartIndex - 1];
+        }
+
+        int maxValueInd = 0;
+
+        for (int i = srartIndex; i <= endIndexInclude; i++) {
+            if (HeapArray[i] >= maxValueOnLevel) {
+                maxValueInd = i;
+            }
+
+            if (HeapArray[i] > maxValueOnLevel && (lastMax == null ||  HeapArray[i] < lastMax)) {
                 maxValueOnLevel = HeapArray[i];
             }
         }
 
+        maxSelectedFromThisLevel++;
+
+        checkMaxInfoUpdate(levelCount, maxValueOnLevel, maxValueInd);
+
         return maxValueOnLevel;
+    }
+
+    private void checkMaxInfoUpdate(int nodeLevelCount, int newMaxValue, int maxValueInd) {
+        if (maxSelectedFromThisLevel == nodeLevelCount) {
+            lastMax = null;
+            maxSelectedFromThisLevel = 0;
+            viewedLevel++;
+        } else {
+            lastMax = newMaxValue;
+            lastIndexMax = maxValueInd;
+        }
+    }
+
+    private int findIndexWithValueLessThenMax(int startIndex, int endIndexInclude) {
+        for (int i = startIndex; i <= endIndexInclude; i++) {
+            if (HeapArray[i] <= lastMax && i != lastIndexMax) {
+                return i + 1;
+            }
+        }
+
+        return -1;
     }
 
     private void compareAndSwapRootWithChild(int index) {
@@ -149,12 +190,12 @@ class Heap
 
         res.MakeHeap(new int[1], (int)Math.floor(Math.log(HeapArray.length + second.HeapArray.length)/Math.log(2)));
 
-        return fillHeapRecursive(res, second, null, null, 0);
+        return fillHeapRecursive(res, second, null, null);
     }
 
-    private Heap fillHeapRecursive(Heap result, Heap second, Integer savedFirst, Integer savedSecond, Integer level) {
-        Integer maxFirst = savedFirst == null ? this.GetMaxFromLevel(level) : savedFirst;
-        Integer maxSecond = savedSecond == null ? second.GetMaxFromLevel(level) : savedSecond;
+    private Heap fillHeapRecursive(Heap result, Heap second, Integer savedFirst, Integer savedSecond) {
+        Integer maxFirst = savedFirst == null ? this.GetMaxFromLevel() : savedFirst;
+        Integer maxSecond = savedSecond == null ? second.GetMaxFromLevel() : savedSecond;
 
         if (maxFirst == null && maxSecond == null) {
             return result;
@@ -173,6 +214,6 @@ class Heap
             result.Add(insertFirst ? maxFirst : maxSecond);
         }
 
-        return fillHeapRecursive(result, second, insertFirst ? null : maxFirst, insertFirst ? maxSecond : null, level + 1);
+        return fillHeapRecursive(result, second, insertFirst ? null : maxFirst, insertFirst ? maxSecond : null);
     }
 }
