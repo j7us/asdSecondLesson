@@ -44,6 +44,25 @@ class Heap
         return root;
     }
 
+    public Integer GetMaxFromLevel(int level) {
+        int srartIndex = (int)Math.pow(2, level) - 1;
+        int endIndexInclude = 2 * srartIndex;
+
+        if (srartIndex >= HeapArray.length) {
+            return null;
+        }
+
+        int maxValueOnLevel = HeapArray[srartIndex];
+
+        for (int i = srartIndex + 1; i <= endIndexInclude; i++) {
+            if (HeapArray[i] > maxValueOnLevel) {
+                maxValueOnLevel = HeapArray[i];
+            }
+        }
+
+        return maxValueOnLevel;
+    }
+
     private void compareAndSwapRootWithChild(int index) {
        if (index >= lastInd || 2 * index + 1 > lastInd - 1) {
            return;
@@ -130,23 +149,23 @@ class Heap
 
         res.MakeHeap(new int[1], (int)Math.floor(Math.log(HeapArray.length + second.HeapArray.length)/Math.log(2)));
 
-        return fillHeapRecursive(res, second, -1, -1);
+        return fillHeapRecursive(res, second, null, null, 0);
     }
 
-    private Heap fillHeapRecursive(Heap result, Heap second, int savedFirst, int savedSecond) {
-        int maxFirst = savedFirst < 0 ? this.GetMax() : savedFirst;
-        int maxSecond = savedSecond < 0 ? second.GetMax() : savedSecond;
+    private Heap fillHeapRecursive(Heap result, Heap second, Integer savedFirst, Integer savedSecond, Integer level) {
+        Integer maxFirst = savedFirst == null ? this.GetMaxFromLevel(level) : savedFirst;
+        Integer maxSecond = savedSecond == null ? second.GetMaxFromLevel(level) : savedSecond;
 
-        if (maxFirst < 0 && maxSecond < 0) {
+        if (maxFirst == null && maxSecond == null) {
             return result;
         }
 
         boolean insertFirst;
 
-        if (maxFirst < 0 && maxSecond >= 0) {
+        if (maxFirst == null && maxSecond != null) {
             result.Add(maxSecond);
             insertFirst = false;
-        } else if (maxFirst >= 0 && maxSecond < 0) {
+        } else if (maxFirst != null && maxSecond == null) {
             result.Add(maxFirst);
             insertFirst = true;
         } else {
@@ -154,6 +173,6 @@ class Heap
             result.Add(insertFirst ? maxFirst : maxSecond);
         }
 
-        return fillHeapRecursive(result, second, insertFirst ? -1 : maxFirst, insertFirst ? maxSecond : -1);
+        return fillHeapRecursive(result, second, insertFirst ? null : maxFirst, insertFirst ? maxSecond : null, level + 1);
     }
 }
