@@ -6,7 +6,7 @@ class Heap
 {
     public int [] HeapArray; // хранит неотрицательные числа-ключи
     private int lastInd = 0;
-    private Integer lastMax = 0;
+    private Integer lastMax = null;
     private int lastIndexMax = 0;
     private int maxSelectedFromThisLevel = 0;
     private int viewedLevel = 0;
@@ -50,28 +50,28 @@ class Heap
 
     public Integer GetMaxFromLevel() {
         int levelCount = (int)Math.pow(2, viewedLevel);
-        int srartIndex = levelCount - 1;
-        int endIndexInclude = Math.min(2 * srartIndex, lastInd);
+        int startIndex = levelCount - 1;
+        int endIndexInclude = Math.min(2 * startIndex, lastInd);
 
-        if (srartIndex >= HeapArray.length) {
+        if (startIndex >= HeapArray.length || startIndex >= lastInd) {
             return null;
         }
 
-        int maxValueOnLevel = HeapArray[srartIndex];
+        int maxValueOnLevel = HeapArray[startIndex];
 
         if (maxSelectedFromThisLevel != 0) {
-            srartIndex = findIndexWithValueLessThenMax(srartIndex, endIndexInclude);
+            startIndex = findIndexWithValueLessThenMax(startIndex, endIndexInclude);
 
-            if (srartIndex < 0) {
+            if (startIndex < 0) {
                 return null;
             }
 
-            maxValueOnLevel = HeapArray[srartIndex - 1];
+            maxValueOnLevel = HeapArray[startIndex - 1];
         }
 
         int maxValueInd = 0;
 
-        for (int i = srartIndex; i <= endIndexInclude; i++) {
+        for (int i = startIndex; i <= endIndexInclude; i++) {
             if (HeapArray[i] >= maxValueOnLevel) {
                 maxValueInd = i;
             }
@@ -91,6 +91,7 @@ class Heap
     private void checkMaxInfoUpdate(int nodeLevelCount, int newMaxValue, int maxValueInd) {
         if (maxSelectedFromThisLevel == nodeLevelCount) {
             lastMax = null;
+            lastIndexMax = 0;
             maxSelectedFromThisLevel = 0;
             viewedLevel++;
         } else {
