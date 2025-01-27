@@ -5,9 +5,11 @@ import java.util.*;
 class Vertex
 {
     public int Value;
+    public boolean Hit;
     public Vertex(int val)
     {
         Value = val;
+        Hit = false;
     }
 }
 
@@ -83,5 +85,50 @@ class SimpleGraph
     {
         m_adjacency[v1][v2] = 0;
         m_adjacency[v2][v1] = 0;
+    }
+
+    public ArrayList<Vertex> DepthFirstSearch(int VFrom, int VTo)
+    {
+        if (vertex[VFrom] == null || vertex[VTo] == null) {
+            return new ArrayList<>();
+        }
+
+        cleanAllHit();
+        ArrayList<Vertex> resultPath = new ArrayList<>();
+
+        vertex[VFrom].Hit = true;
+        resultPath.add(vertex[VFrom]);
+
+        return DepthFirstSearchRecursive(VFrom, VTo, resultPath);
+    }
+
+    private ArrayList<Vertex> DepthFirstSearchRecursive(int VFrom, int VTo, ArrayList<Vertex> resultPath) {
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[VFrom][i] == 1 && !vertex[i].Hit) {
+                vertex[i].Hit = true;
+                resultPath.add(vertex[i]);
+
+                if (i == VTo) {
+                    return resultPath;
+                }
+
+                ArrayList<Vertex> stepResult = DepthFirstSearchRecursive(i, VTo, resultPath);
+
+                if (stepResult.get(stepResult.size() - 1) == vertex[VTo]) {
+                    return resultPath;
+                }
+            }
+        }
+
+        resultPath.remove(resultPath.size() - 1);
+        return resultPath;
+    }
+
+    private void cleanAllHit() {
+        for (int i = 0; i < vertex.length; i++) {
+            if (vertex[i] != null) {
+                vertex[i].Hit = false;
+            }
+        }
     }
 }

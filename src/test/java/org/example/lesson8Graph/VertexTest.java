@@ -2,6 +2,7 @@ package org.example.lesson8Graph;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -188,5 +189,61 @@ public class VertexTest {
         boolean res = graph.IsEdge(0, 1);
 
         assertThat(res).isFalse();
+    }
+
+    @Test
+    void DepthFirstSearchEmptyTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        ArrayList<Vertex> res = graph.DepthFirstSearch(1, 2);
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void DepthFirstSearchSingleTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddEdge(0, 1);
+
+        ArrayList<Vertex> res = graph.DepthFirstSearch(0, 1);
+
+        assertThat(res.size()).isEqualTo(2);
+    }
+
+    @Test
+    void DepthFirstSearchFalseTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+        graph.AddEdge(0, 1);
+
+        ArrayList<Vertex> res = graph.DepthFirstSearch(0, 2);
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void DepthFirstSearchTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+
+        ArrayList<Vertex> res = graph.DepthFirstSearch(0, 2);
+
+        assertThat(res.size()).isEqualTo(3);
     }
 }

@@ -87,7 +87,7 @@ class SimpleGraph
         boolean vertexCyclicTEstResult = false;
 
         for (int i = 0; i < vertex.length; i++) {
-            if (!vertex[i].scanned) {
+            if (vertex[i] != null && !vertex[i].scanned) {
                 vertexCyclicTEstResult = isСyclicGraphRecursive(i, new HashSet<>());
 
                 if (vertexCyclicTEstResult) {
@@ -100,13 +100,11 @@ class SimpleGraph
     }
 
     private boolean isСyclicGraphRecursive(int vertexIndex, Set<Vertex> path) {
-        if (vertex[vertexIndex] == null) {
-            return false;
-        }
-
         if (!path.add(vertex[vertexIndex])) {
             return true;
         }
+
+        vertex[vertexIndex].scanned = true;
 
         for (int i = 0; i < vertex.length; i++) {
             boolean res = false;
