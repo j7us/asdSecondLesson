@@ -61,6 +61,11 @@ class Heap
 
         if (maxSelectedFromThisLevel != 0) {
             srartIndex = findIndexWithValueLessThenMax(srartIndex, endIndexInclude);
+
+            if (srartIndex < 0) {
+                return null;
+            }
+
             maxValueOnLevel = HeapArray[srartIndex - 1];
         }
 
