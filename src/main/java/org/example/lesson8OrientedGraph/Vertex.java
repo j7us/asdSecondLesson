@@ -5,7 +5,7 @@ import java.util.*;
 class Vertex
 {
     public int Value;
-    boolean scanned;
+    int colour;
     public Vertex(int val)
     {
         Value = val;
@@ -84,39 +84,47 @@ class SimpleGraph
     }
 
     public boolean isСyclicGraph() {
-        boolean vertexCyclicTEstResult = false;
-
         for (int i = 0; i < vertex.length; i++) {
-            if (vertex[i] != null && !vertex[i].scanned && isСyclicGraphRecursive(i, new HashSet<>())) {
-                vertexCyclicTEstResult = true;
-                break;
+            if (vertex[i] != null && vertex[i].colour != VertexColour.BLACK.getValue() && isСyclicGraphRecursive(i)) {
+                return true;
             }
-        }
-
-        return vertexCyclicTEstResult;
-    }
-
-    private boolean isСyclicGraphRecursive(int vertexIndex, Set<Vertex> path) {
-        if (!path.add(vertex[vertexIndex])) {
-            return true;
-        }
-
-        vertex[vertexIndex].scanned = true;
-
-        for (int i = 0; i < vertex.length; i++) {
-            boolean res = false;
-
-            if (m_adjacency[vertexIndex][i] == 1) {
-                 res = isСyclicGraphRecursive(i, path);
-            }
-
-            if (res) {
-                return res;
-            }
-
-            path.remove(vertex[i]);
         }
 
         return false;
+    }
+
+    public boolean isСyclicGraphRecursive(int vertexIndex) {
+        if (vertex[vertexIndex].colour == VertexColour.GREY.getValue()) {
+            return true;
+        } else if (vertex[vertexIndex].colour == VertexColour.BLACK.getValue()) {
+            return false;
+        }
+
+        vertex[vertexIndex].colour = VertexColour.GREY.getValue();
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[vertexIndex][i] == 1 && isСyclicGraphRecursive(i)) {
+                return true;
+            }
+        }
+
+        vertex[vertexIndex].colour = VertexColour.BLACK.getValue();
+
+        return false;
+    }
+
+    private static enum VertexColour {
+        GREY(1),
+        BLACK(2);
+
+        private final int value;
+
+        VertexColour(int colorValue) {
+            this.value = colorValue;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }
