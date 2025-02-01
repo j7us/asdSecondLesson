@@ -293,9 +293,60 @@ public class VertexTest {
         graph.AddEdge(0, 1);
         graph.AddEdge(0, 3);
         graph.AddEdge(1, 4);
+        graph.AddEdge(3, 2);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void cycl() {
+        SimpleGraph graph = new SimpleGraph(4);
+        graph.AddVertex(10);
+        graph.AddVertex(20);
+        graph.AddVertex(30);
+        graph.AddVertex(40);
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 3);
+        graph.AddEdge(3, 0);
+        ArrayList<Vertex> path = graph.BreadthFirstSearch(0, 3);
+
+        assertThat(path.size()).isEqualTo(2);
+    }
+
+    @Test
+    void emp() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(10);
+        graph.AddVertex(20);
+        graph.AddVertex(30);
+        graph.AddEdge(0, 1);
 
         ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
 
         assertThat(res).isEmpty();
+    }
+
+    @Test
+    void one() {
+        SimpleGraph graph = new SimpleGraph(1);
+        graph.AddVertex(10);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 0);
+
+        assertThat(res.size()).isEqualTo(1);
+    }
+
+    @Test
+    void two() {
+        SimpleGraph graph = new SimpleGraph(2);
+        graph.AddVertex(10);
+        graph.AddVertex(20);
+        graph.AddEdge(0, 1);
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 1);
+
+        assertThat(res.size()).isEqualTo(2);
     }
 }

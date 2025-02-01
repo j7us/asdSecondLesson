@@ -134,45 +134,58 @@ class SimpleGraph
 
     public ArrayList<Vertex> BreadthFirstSearch(int VFrom, int VTo)
     {
+        if (vertex[VFrom] == null || vertex[VTo] == null) {
+            return new ArrayList<>();
+        }
+
+        if (VFrom == VTo) {
+            return new ArrayList<>(Arrays.asList(vertex[VFrom]));
+        }
+
         cleanAllHit();
 
         ArrayDeque<Integer> vertQueue = new ArrayDeque<>();
         vertQueue.add(VFrom);
 
-        HashMap<Integer, ArrayList<Vertex>> resultMap = new HashMap<>();
-        ArrayList<Vertex> path = new ArrayList<>();
-        path.add(vertex[VFrom]);
-        resultMap.put(VFrom, path);
+        HashMap<Integer, Integer> childParentMap = new HashMap<>();
+        childParentMap.put(VFrom, null);
 
-        BreadthFirstSearchRecursive(vertQueue, resultMap, VTo);
+        BreadthFirstSearchRecursive(vertQueue, childParentMap, VTo);
 
-        return resultMap.get(VTo) == null ? new ArrayList<>() : resultMap.get(VTo);
+        if (childParentMap.get(VTo) == null) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Vertex> result = new ArrayList<>();
+
+        for (Integer i = VTo; i != null; i = childParentMap.get(i)) {
+            result.add(vertex[i]);
+        }
+
+        return result;
     }
 
     private void BreadthFirstSearchRecursive(Queue<Integer> vertexQueue,
-                                             Map<Integer, ArrayList<Vertex>> childParentMap,
+                                             Map<Integer, Integer> childParentMap,
                                              int VTo) {
         if (vertexQueue.isEmpty()) {
             return;
         }
 
-        Integer nextVertex = vertexQueue.poll();
+        Integer curr = vertexQueue.poll();
 
-        if (nextVertex == VTo) {
+        if (curr == VTo) {
             return;
         }
 
-        for (int i = 0; i < vertex.length && !vertex[nextVertex].Hit; i++) {
-            if (m_adjacency[nextVertex][i] == 1) {
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[curr][i] == 1 && !vertex[i].Hit) {
                 vertexQueue.add(i);
-
-                ArrayList<Vertex> currentPath = new ArrayList<>(childParentMap.get(nextVertex));
-                currentPath.add(vertex[i]);
-                childParentMap.put(i, currentPath);
+                childParentMap.put(i, curr);
             }
         }
 
-        vertex[nextVertex].Hit = true;
+        vertex[curr].Hit = true;
 
         BreadthFirstSearchRecursive(vertexQueue, childParentMap, VTo);
     }
