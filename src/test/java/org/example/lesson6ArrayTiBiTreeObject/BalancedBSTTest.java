@@ -3,6 +3,7 @@ package org.example.lesson6ArrayTiBiTreeObject;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.lesson6ArrayTiBiTreeObject.BalancedBST.balanceBST;
 
 public class BalancedBSTTest {
 
@@ -144,5 +145,23 @@ public class BalancedBSTTest {
         toInsert.LeftChild = node;
 
         assertThat(tree.IsBalanced(tree.Root)).isFalse();
+    }
+
+    @Test
+    void balanceBSTTest() {
+        BalancedBST tree = new BalancedBST();
+
+        BSTNode node = new BSTNode(1, null);
+        BSTNode node1 = new BSTNode(2, node);
+        node.RightChild = node1;
+        BSTNode node2 = new BSTNode(3, node1);
+        node1.RightChild =  node2;
+        tree.Root = node;
+
+        BalancedBST resultTree = balanceBST(tree);
+
+
+        assertThat(resultTree.validateTree()).isTrue();
+        assertThat(resultTree.IsBalanced(resultTree.Root)).isTrue();
     }
 }

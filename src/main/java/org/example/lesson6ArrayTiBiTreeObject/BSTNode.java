@@ -35,6 +35,11 @@ class BalancedBST
         Root = generateTreeRecursive(null, a, 0, a.length - 1, 0);
     }
 
+    public void GenerateTreeWithoutSort(int[] a)
+    {
+        Root = generateTreeRecursive(null, a, 0, a.length - 1, 0);
+    }
+
     private BSTNode generateTreeRecursive(BSTNode parent, int[] a, int startIndex, int endIndex, int level) {
         if (startIndex > endIndex) {
             return null;
@@ -110,5 +115,26 @@ class BalancedBST
         }
 
         return -1;
+    }
+
+    public static BalancedBST balanceBST(BalancedBST notBalancedTree) {
+        ArrayList<Integer> keysArray = buildTreeKeyArray(notBalancedTree.Root, new ArrayList<>());
+
+        BalancedBST resTree = new BalancedBST();
+        resTree.GenerateTreeWithoutSort(keysArray.stream().mapToInt(Integer::intValue).toArray());
+
+        return resTree;
+    }
+
+    private static ArrayList<Integer> buildTreeKeyArray(BSTNode node, ArrayList<Integer> keys) {
+        if (node == null) {
+            return keys;
+        }
+
+        buildTreeKeyArray(node.LeftChild, keys);
+        keys.add(node.NodeKey);
+        buildTreeKeyArray(node.RightChild, keys);
+
+        return keys;
     }
 }

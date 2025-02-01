@@ -527,9 +527,4 @@ class BST<T>
 
         return parentNode;
     }
-
-    public static <T> void balanceTree(BST<T> tree) {
-        balanceTreeRecursive(tree, tree.Root);
-    }
-    private void balanceTreeRecursive() {}
 }

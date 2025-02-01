@@ -243,8 +243,9 @@ class SimpleTree<T>
 
     public int countEvenTrees(SimpleTreeNode<T> node) {
         ArrayList<T> res = new ArrayList<>();
-        EvenTreesRecursive(res, node);
 
-        return res.isEmpty() ? 0 : res.size() / 2 + 1;
+        return EvenTreesRecursive(res, node) % 2 == 0
+                ? res.size() / 2 + 1
+                : 0;
     }
 }
