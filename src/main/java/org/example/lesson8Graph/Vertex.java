@@ -131,4 +131,49 @@ class SimpleGraph
             }
         }
     }
+
+    public ArrayList<Vertex> BreadthFirstSearch(int VFrom, int VTo)
+    {
+        cleanAllHit();
+
+        ArrayDeque<Integer> vertQueue = new ArrayDeque<>();
+        vertQueue.add(VFrom);
+
+        HashMap<Integer, ArrayList<Vertex>> resultMap = new HashMap<>();
+        ArrayList<Vertex> path = new ArrayList<>();
+        path.add(vertex[VFrom]);
+        resultMap.put(VFrom, path);
+
+        BreadthFirstSearchRecursive(vertQueue, resultMap, VTo);
+
+        return resultMap.get(VTo) == null ? new ArrayList<>() : resultMap.get(VTo);
+    }
+
+    private void BreadthFirstSearchRecursive(Queue<Integer> vertexQueue,
+                                             Map<Integer, ArrayList<Vertex>> childParentMap,
+                                             int VTo) {
+        if (vertexQueue.isEmpty()) {
+            return;
+        }
+
+        Integer nextVertex = vertexQueue.poll();
+
+        if (nextVertex == VTo) {
+            return;
+        }
+
+        for (int i = 0; i < vertex.length && !vertex[nextVertex].Hit; i++) {
+            if (m_adjacency[nextVertex][i] == 1) {
+                vertexQueue.add(i);
+
+                ArrayList<Vertex> currentPath = new ArrayList<>(childParentMap.get(nextVertex));
+                currentPath.add(vertex[i]);
+                childParentMap.put(i, currentPath);
+            }
+        }
+
+        vertex[nextVertex].Hit = true;
+
+        BreadthFirstSearchRecursive(vertexQueue, childParentMap, VTo);
+    }
 }

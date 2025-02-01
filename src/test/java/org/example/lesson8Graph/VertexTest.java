@@ -246,4 +246,56 @@ public class VertexTest {
 
         assertThat(res.size()).isEqualTo(3);
     }
+
+    @Test
+    void BreadthFirstSearchEmptyTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void BreadthFirstSearchTrueTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void BreadthFirstSearchFalseTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 3);
+        graph.AddEdge(1, 4);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res).isEmpty();
+    }
 }

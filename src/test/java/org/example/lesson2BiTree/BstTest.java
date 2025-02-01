@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.lesson2BiTree.BST.balanceTree;
 
 public class BstTest {
 
@@ -545,5 +546,71 @@ public class BstTest {
         BST<String> bst = BST.buildTreeFromOrder(pre, inf);
 
         assertThat(bst.Root.NodeKey).isEqualTo(1);
+    }
+
+    @Test
+    void balanceTreeEmptyTest() {
+        BST<String> bst = new BST<>(null);
+
+        balanceTree(bst);
+    }
+
+    @Test
+    void balanceTreeBalancedTreeTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        testRootNode.LeftChild = new BSTNode<>(10, "B", testRootNode);
+        testRootNode.RightChild = new BSTNode<>(20, "C", testRootNode);
+
+        BSTNode<String> root2 = new BSTNode<>(15, "A", null);
+        root2.LeftChild = new BSTNode<>(10, "B", testRootNode);
+        root2.RightChild = new BSTNode<>(20, "C", testRootNode);
+        BST<String> bst2 = new BST<>(root2);
+
+        balanceTree(bst);
+
+        assertThat(bst.isTreesEquals(bst2)).isTrue();
+    }
+
+    @Test
+    void balanceTreeBalancedTreeWithOneNodeDiffTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "C");
+        bst.AddKeyValue(25, "D");
+
+        BSTNode<String> root2 = new BSTNode<>(15, "A", null);
+        BST<String> bst2 = new BST<>(root2);
+
+        bst2.AddKeyValue(10, "B");
+        bst2.AddKeyValue(20, "C");
+        bst2.AddKeyValue(25, "D");
+
+        balanceTree(bst);
+
+        assertThat(bst.isTreesEquals(bst2)).isTrue();
+    }
+
+    @Test
+    void balanceTreeOneSpinTest() {
+        BST<String> bst = new BST<>(testRootNode);
+
+        bst.AddKeyValue(10, "B");
+        bst.AddKeyValue(20, "C");
+        bst.AddKeyValue(25, "D");
+        bst.AddKeyValue(30, "E");
+
+        BSTNode<String> root2 = new BSTNode<>(25, "D", null);
+        BST<String> bst2 = new BST<>(root2);
+
+        bst2.AddKeyValue(15, "A");
+        bst2.AddKeyValue(10, "B");
+        bst2.AddKeyValue(20, "C");
+        bst2.AddKeyValue(30, "E");
+
+        balanceTree(bst);
+
+        assertThat(bst.isTreesEquals(bst2)).isTrue();
     }
 }
