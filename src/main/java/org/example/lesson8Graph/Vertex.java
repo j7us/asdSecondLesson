@@ -138,10 +138,6 @@ class SimpleGraph
             return new ArrayList<>();
         }
 
-        if (VFrom == VTo) {
-            return new ArrayList<>(Arrays.asList(vertex[VFrom]));
-        }
-
         cleanAllHit();
 
         Queue<Integer> verQueue = new ArrayDeque<>();

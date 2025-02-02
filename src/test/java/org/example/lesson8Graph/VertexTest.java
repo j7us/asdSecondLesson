@@ -339,10 +339,11 @@ public class VertexTest {
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 1);
         graph.AddEdge(1, 2);
+        graph.AddEdge(2, 0);
 
         ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
 
-        assertThat(res.size()).isEqualTo(3);
+        assertThat(res.size()).isEqualTo(2);
     }
 
     @Test
