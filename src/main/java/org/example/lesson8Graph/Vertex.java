@@ -149,7 +149,15 @@ class SimpleGraph
 
         BreadthFirstSearchRecursive(verQueue, VTo, childParent);
 
-        return childParent.get(VTo) == null ? new ArrayList<>() : buildPath(childParent, VTo, new ArrayList<>());
+        if (childParent.get(VTo) == null) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Vertex> res = buildPath(childParent, VTo, new ArrayList<>());
+
+        Collections.reverse(res);
+
+        return res;
     }
 
     private ArrayList<Vertex> buildPath(Map<Integer, Integer> childParent, int VTo, ArrayList<Vertex> path) {
