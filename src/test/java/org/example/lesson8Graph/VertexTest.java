@@ -326,7 +326,7 @@ public class VertexTest {
 
         ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 0);
 
-        assertThat(res.size()).isEqualTo(1);
+        assertThat(res).isEmpty();
     }
 
     @Test
