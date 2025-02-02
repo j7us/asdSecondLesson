@@ -118,7 +118,7 @@ class BalancedBST
     }
 
     public static BalancedBST balanceBST(BalancedBST notBalancedTree) {
-        ArrayList<Integer> keysArray = buildTreeKeyArray(notBalancedTree.Root, new ArrayList<>());
+        LinkedList<Integer> keysArray = buildTreeKeyArray(notBalancedTree.Root, new LinkedList<>());
 
         BalancedBST resTree = new BalancedBST();
         resTree.GenerateTreeWithoutSort(keysArray.stream().mapToInt(Integer::intValue).toArray());
@@ -126,7 +126,7 @@ class BalancedBST
         return resTree;
     }
 
-    private static ArrayList<Integer> buildTreeKeyArray(BSTNode node, ArrayList<Integer> keys) {
+    private static LinkedList<Integer> buildTreeKeyArray(BSTNode node, LinkedList<Integer> keys) {
         if (node == null) {
             return keys;
         }

@@ -13,7 +13,7 @@ public class SimpleTreeNode<T>
     {
         NodeValue = val;
         Parent = parent;
-        Children = null;
+        Children = new ArrayList<>();
     }
 }
 
@@ -30,10 +30,6 @@ class SimpleTree<T>
     {
         if (Root == null) {
             return;
-        }
-
-        if (ParentNode.Children == null) {
-            ParentNode.Children = new ArrayList<>();
         }
 
         ParentNode.Children.add(NewChild);
@@ -221,7 +217,7 @@ class SimpleTree<T>
     }
 
     private int EvenTreesRecursive(ArrayList<T> resultList, SimpleTreeNode<T> node) {
-        if (node.Children == null) {
+        if (node.Children.isEmpty()) {
             return 1;
         }
 

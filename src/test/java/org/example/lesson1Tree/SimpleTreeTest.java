@@ -16,7 +16,7 @@ public class SimpleTreeTest {
 
     @BeforeEach
     void setTree() {
-        defaultRootNode.Children = null;
+        defaultRootNode.Children = new ArrayList<>();
     }
 
     @Test
