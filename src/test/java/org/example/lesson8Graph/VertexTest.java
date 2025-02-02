@@ -319,20 +319,10 @@ public class VertexTest {
     @Test
     void emp() {
         SimpleGraph graph = new SimpleGraph(3);
-        graph.AddVertex(10);
-        graph.AddVertex(20);
-        graph.AddVertex(30);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
         graph.AddEdge(0, 1);
-
-        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
-
-        assertThat(res).isEmpty();
-    }
-
-    @Test
-    void one() {
-        SimpleGraph graph = new SimpleGraph(1);
-        graph.AddVertex(10);
 
         ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 0);
 
@@ -340,12 +330,45 @@ public class VertexTest {
     }
 
     @Test
-    void two() {
-        SimpleGraph graph = new SimpleGraph(2);
-        graph.AddVertex(10);
-        graph.AddVertex(20);
+    void one() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
         graph.AddEdge(0, 1);
-        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 1);
+        graph.AddEdge(1, 1);
+        graph.AddEdge(1, 2);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void two() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddEdge(0, 1);
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void cy() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 0);
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 2);
+        graph.AddEdge(1, 2);
+
+        ArrayList<Vertex> res = graph.BreadthFirstSearch(0, 2);
 
         assertThat(res.size()).isEqualTo(2);
     }
