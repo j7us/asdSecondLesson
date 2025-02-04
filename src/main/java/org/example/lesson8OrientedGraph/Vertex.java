@@ -113,7 +113,51 @@ class SimpleGraph
         return false;
     }
 
-    private static enum VertexColour {
+    public int findLongestPath() {
+        int longestPath = 0;
+        HashMap<Integer, Integer> maxLengthForEachVertex = new HashMap<>();
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (vertex[i] != null && vertex[i].colour != VertexColour.BLACK.getValue()) {
+                int currentLength = findLongestPathRec(i, maxLengthForEachVertex);
+
+                longestPath = Math.max(currentLength, longestPath);
+            }
+        }
+
+        return longestPath;
+    }
+
+    private int findLongestPathRec(int index, Map<Integer, Integer> maxLengthForEachVertex) {
+        int maxLengthForCurrent = 0;
+
+        vertex[index].colour = VertexColour.GREY.getValue();
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[index][i] != 1
+                    || (m_adjacency[index][i] == 1 && vertex[i].colour == VertexColour.GREY.getValue())) {
+                continue;
+            }
+
+            int res;
+
+            if (vertex[i].colour == VertexColour.BLACK.getValue()) {
+                res = maxLengthForEachVertex.get(i) + 1;
+            } else {
+                res = findLongestPathRec(i, maxLengthForEachVertex);
+            }
+
+            maxLengthForCurrent = Math.max(maxLengthForCurrent, res);
+        }
+
+        vertex[index].colour = VertexColour.BLACK.getValue();
+
+        maxLengthForEachVertex.put(index, maxLengthForCurrent);
+
+        return maxLengthForCurrent + 1;
+    }
+
+    private enum VertexColour {
         GREY(1),
         BLACK(2);
 

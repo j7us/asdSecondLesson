@@ -248,6 +248,37 @@ public class VertexTest {
     }
 
     @Test
+    void isConnectivityGraphFalseTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 1);
+
+        boolean res = graph.isConnectivityGraph();
+
+        assertThat(res).isFalse();
+    }
+
+    @Test
+    void isConnectivityGraphTrueTest() {
+        SimpleGraph graph = new SimpleGraph(5);
+
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+
+        boolean res = graph.isConnectivityGraph();
+
+        assertThat(res).isTrue();
+    }
+
+    @Test
     void BreadthFirstSearchEmptyTest() {
         SimpleGraph graph = new SimpleGraph(5);
 

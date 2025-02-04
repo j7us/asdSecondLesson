@@ -124,6 +124,41 @@ class SimpleGraph
         return resultPath;
     }
 
+    public boolean isConnectivityGraph() {
+        ArrayList<Integer> allInd = getAllNotNullVertexIndex();
+
+        vertex[allInd.get(0)].Hit = true;
+
+        ArrayList<Integer> res = new ArrayList<>();
+        res.add(allInd.get(0));
+        tryToCollectAllVertexFromOne(allInd.get(0), res);
+
+        return allInd.size() == res.size();
+    }
+
+    private void tryToCollectAllVertexFromOne(int vertexInd, ArrayList<Integer> res) {
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[vertexInd][i] == 1 && !vertex[i].Hit) {
+                vertex[i].Hit = true;
+                res.add(i);
+
+                tryToCollectAllVertexFromOne(i, res);
+            }
+        }
+    }
+
+    private ArrayList<Integer> getAllNotNullVertexIndex() {
+        ArrayList<Integer> res = new ArrayList<>();
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (vertex[i] != null) {
+                res.add(i);
+            }
+        }
+
+        return res;
+    }
+
     private void cleanAllHit() {
         for (int i = 0; i < vertex.length; i++) {
             if (vertex[i] != null) {
