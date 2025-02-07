@@ -226,4 +226,55 @@ class SimpleGraph
 
         BreadthFirstSearchRecursive(verQueue, VTo, childParent);
     }
+
+    public ArrayList<Vertex> WeakVertices()
+    {
+        ArrayList<Vertex> res = new ArrayList<>();
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (vertex[i] != null && !tryToFindtriangle(i)) {
+                res.add(vertex[i]);
+            }
+        }
+
+        return res;
+    }
+
+    private boolean tryToFindtriangle(int currentVertex) {
+        vertex[currentVertex].Hit = true;
+        boolean res = tryToFindtriangleRecursive(currentVertex, currentVertex, 3);
+        vertex[currentVertex].Hit = false;
+
+        return res;
+    }
+
+    private boolean tryToFindtriangleRecursive(int currentVertex, int Vto, int steps) {
+        if (steps == 0) {
+            return false;
+        }
+
+        for (int i = 0; i < vertex.length; i++) {
+            if (m_adjacency[currentVertex][i] != 1) {
+                continue;
+            }
+
+            if (steps == 1 && i == Vto && currentVertex != Vto) {
+                return true;
+            }
+
+            boolean res = false;
+
+            if (!vertex[i].Hit) {
+                vertex[i].Hit = true;
+                res = tryToFindtriangleRecursive(i, Vto, steps - 1);
+                vertex[i].Hit = false;
+            }
+
+            if (res) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

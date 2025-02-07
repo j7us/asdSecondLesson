@@ -404,4 +404,172 @@ public class VertexTest {
 
         assertThat(res.size()).isEqualTo(2);
     }
+
+    @Test
+    void WeakVerticesEmptyTest() {
+        SimpleGraph graph = new SimpleGraph(3);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void WeakVerticesWithoutEdgeTest() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void WeakVerticesWithoutTriangleTest() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 2);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void WeakVerticesWithoutTriangleWithLoopTest() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 0);
+        graph.AddEdge(1, 1);
+        graph.AddEdge(2, 2);
+        graph.AddEdge(0, 2);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res.size()).isEqualTo(3);
+    }
+
+    @Test
+    void WeakVerticesWithTriangleTest1() {
+        SimpleGraph graph = new SimpleGraph(3);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 0);
+        graph.AddEdge(1, 1);
+        graph.AddEdge(2, 2);
+        graph.AddEdge(0, 2);
+        graph.AddEdge(1, 2);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void WeakVerticesWithTriangleTest2() {
+        SimpleGraph graph = new SimpleGraph(5);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(1, 3);
+        graph.AddEdge(1, 4);
+        graph.AddEdge(3, 4);
+        graph.AddEdge(0, 0);
+        graph.AddEdge(2, 2);
+        graph.AddEdge(1, 1);
+        graph.AddEdge(4, 4);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res.size()).isEqualTo(2);
+    }
+
+    @Test
+    void WeakVerticesWithTriangleTest3() {
+        SimpleGraph graph = new SimpleGraph(5);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(1, 3);
+        graph.AddEdge(1, 4);
+        graph.AddEdge(3, 4);
+        graph.AddEdge(0, 0);
+        graph.AddEdge(2, 2);
+        graph.AddEdge(1, 1);
+        graph.AddEdge(4, 4);
+        graph.AddEdge(0, 2);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void WeakVerticesWithTriangleTest4() {
+        SimpleGraph graph = new SimpleGraph(7);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+        graph.AddVertex(6);
+        graph.AddVertex(7);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(0, 2);
+        graph.AddEdge(0, 3);
+        graph.AddEdge(0, 4);
+        graph.AddEdge(0, 5);
+        graph.AddEdge(0, 6);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 3);
+        graph.AddEdge(3, 4);
+        graph.AddEdge(5, 6);
+        graph.AddEdge(1, 6);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res).isEmpty();
+    }
+
+    @Test
+    void WeakVerticesWithSquareTest() {
+        SimpleGraph graph = new SimpleGraph(7);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 3);
+        graph.AddEdge(3, 0);
+
+        ArrayList<Vertex> res = graph.WeakVertices();
+
+        assertThat(res.size()).isEqualTo(4);
+    }
 }
