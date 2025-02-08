@@ -113,13 +113,22 @@ class SimpleGraph
         return false;
     }
 
+    private void cleanAllVertexColour() {
+        for (int i = 0; i < vertex.length; i++) {
+            if (vertex[i] != null) {
+                vertex[i].colour = 0;
+            }
+        }
+    }
+
     public int findLongestPath() {
+        cleanAllVertexColour();
+
         int longestPath = 0;
-        HashMap<Integer, Integer> maxLengthForEachVertex = new HashMap<>();
 
         for (int i = 0; i < vertex.length; i++) {
             if (vertex[i] != null && vertex[i].colour != VertexColour.BLACK.getValue()) {
-                int currentLength = findLongestPathRec(i, maxLengthForEachVertex);
+                int currentLength = findLongestPathRec(i);
 
                 longestPath = Math.max(currentLength, longestPath);
             }
@@ -128,34 +137,25 @@ class SimpleGraph
         return longestPath;
     }
 
-    private int findLongestPathRec(int index, Map<Integer, Integer> maxLengthForEachVertex) {
-        int maxLengthForCurrent = 0;
+    private int findLongestPathRec(int currIndex) {
+        vertex[currIndex].colour = VertexColour.GREY.getValue();
 
-        vertex[index].colour = VertexColour.GREY.getValue();
+        int longestPath = 0;
 
         for (int i = 0; i < vertex.length; i++) {
-            if (m_adjacency[index][i] != 1
-                    || (m_adjacency[index][i] == 1 && vertex[i].colour == VertexColour.GREY.getValue())) {
-                continue;
+            if (m_adjacency[currIndex][i] == 1 && vertex[i].colour != VertexColour.GREY.getValue()) {
+                int subTreeLongestPath = findLongestPathRec(i);
+
+                longestPath = Math.max(longestPath, subTreeLongestPath);
             }
-
-            int res;
-
-            if (vertex[i].colour == VertexColour.BLACK.getValue()) {
-                res = maxLengthForEachVertex.get(i) + 1;
-            } else {
-                res = findLongestPathRec(i, maxLengthForEachVertex);
-            }
-
-            maxLengthForCurrent = Math.max(maxLengthForCurrent, res);
         }
 
-        vertex[index].colour = VertexColour.BLACK.getValue();
+        vertex[currIndex].colour = VertexColour.BLACK.getValue();
 
-        maxLengthForEachVertex.put(index, maxLengthForCurrent);
-
-        return maxLengthForCurrent + 1;
+        return longestPath + 1;
     }
+
+
 
     private enum VertexColour {
         GREY(1),

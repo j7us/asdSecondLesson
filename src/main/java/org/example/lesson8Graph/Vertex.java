@@ -125,6 +125,7 @@ class SimpleGraph
     }
 
     public boolean isConnectivityGraph() {
+        cleanAllHit();
         ArrayList<Integer> allInd = getAllNotNullVertexIndex();
 
         vertex[allInd.get(0)].Hit = true;
